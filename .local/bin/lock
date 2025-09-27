@@ -1,0 +1,21 @@
+#!/bin/sh
+
+CACHE_FILE="$HOME/.cache/betterlockscreen_last"
+
+CURRENT_WALL=$(grep -oP "(?<=feh --no-fehbg --bg-scale ')[^']+" "$HOME/.fehbg")
+
+[ -z "$CURRENT_WALL" ] && echo "No wallpaper found in ~/.fehbg" && exit 1
+
+if [ -f "$CACHE_FILE" ]; then
+  LAST_WALL=$(cat "$CACHE_FILE")
+else
+  LAST_WALL=""
+fi
+
+if [ "$CURRENT_WALL" = "$LAST_WALL" ]; then
+  betterlockscreen -l blur
+else
+  betterlockscreen -u "$CURRENT_WALL" --blur 0.7
+  echo "$CURRENT_WALL" >"$CACHE_FILE"
+  betterlockscreen -l blur
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd ~/nir/nixos/
+
+sudo nixos-rebuild switch --impure --flake .#nixos

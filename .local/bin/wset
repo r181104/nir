@@ -1,0 +1,24 @@
+#!/bin/sh
+
+Wall_DIR="$HOME/Wallpapers"
+
+CWD="$(pwd)"
+
+cd "$Wall_DIR" || exit
+
+IFS=$'\n'
+
+# SELECTED_WALL=$(for a in *.jpg *.png *.jpeg; do echo -en "$a\0icon\x1f$a\n"; done | rofi -dmenu -p "")
+SELECTED_WALL=$(
+    for a in *.jpg *.png *.jpeg; do
+        echo "$a"
+    done | bemenu --fn 'MesloLGS Nerd Font 20' -l 8 -i --nb '#1d1f21cc' --nf '#c5c8c6' --sb '#81a2becc' --sf '#sffffff'
+    -i -p "Select Wallpaper: "
+)
+
+if [ -n "$SELECTED_WALL" ]; then
+    FULL_PATH="$Wall_DIR/$SELECTED_WALL"
+    bash $HOME/nir/.local/bin/wset-backend "$FULL_PATH"
+fi
+
+cd "$CWD" || exit

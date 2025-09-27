@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Replace pywal placeholders with actual colors
+sed -i "
+  s|{background}|$(grep -m1 'background' ~/.cache/wal/colors.json | cut -d\" -f4)|g
+  s|{foreground}|$(grep -m1 'foreground' ~/.cache/wal/colors.json | cut -d\" -f4)|g
+  s|{color1}|$(sed -n '3p' ~/.cache/wal/colors | cut -d# -f2 | sed 's/^/#/')|g
+  s|{color2}|$(sed -n '4p' ~/.cache/wal/colors | cut -d# -f2 | sed 's/^/#/')|g
+  s|{color4}|$(sed -n '6p' ~/.cache/wal/colors | cut -d# -f2 | sed 's/^/#/')|g
+  s|{color5}|$(sed -n '7p' ~/.cache/wal/colors | cut -d# -f2 | sed 's/^/#/')|g
+  s|{color8}|$(sed -n '9p' ~/.cache/wal/colors | cut -d# -f2 | sed 's/^/#/')|g
+" ~/.config/dunst/dunstrc
+
+# Kill and restart Dunst
+killall .dunst_wrapped
+dunst &

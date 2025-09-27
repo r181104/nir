@@ -1,0 +1,50 @@
+super + Return
+	alacritty
+
+super + shift + Return
+	kitty
+
+super + b
+    firefox
+
+super + e
+	pcmanfm
+
+super + @space
+    bemenu-run --fn 'MesloLGS Nerd Font 20' -l 8 -i --nb '#1d1f21cc' --nf '#c5c8c6' --sb '#81a2becc' --sf '#sffffff'
+
+control + @space
+    ~/nir/.local/bin/wset
+
+super + Escape
+	pkill -USR1 -x sxhkd && dunstify "Refreshed sxhkd"
+
+super + alt + l
+	i3lock --blur=5
+
+super + alt + {q, r}
+	bspc {quit, wm -r}
+
+super + {_,shift + }q
+	bspc node -{c, k}
+
+super + shift + t
+	bspc desktop -l next
+
+super + {_,shift + }{1-9,0}
+    bspc {desktop -f,node -d} ^{1-9,10} --follow
+
+super + {j,k}
+    bspc desktop -f {prev,next}.local
+
+super + shift + Tab
+    bspc node -d last.occupied --follow
+
+super + f
+    bspc node -t ~fullscreen
+
+alt + {h,j,k,l}
+    bspc node -f {west,south,north,east}
+
+alt + shift + {h,j,k,l}
+     bspc node -s {west,south,north,east}

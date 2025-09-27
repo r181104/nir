@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pkill -f polybar
+polybar -q main & disown >/dev/null 2>&1

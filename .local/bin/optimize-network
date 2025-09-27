@@ -1,0 +1,161 @@
+#!/bin/sh
+# Auto DNS Optimizer for Arch/Linux (no prompts, benchmarks + applies best DNS)
+
+# =============================
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+section() { echo -e "\n${CYAN}${BOLD}==> $1${NC}"; }
+success() { echo -e "${GREEN}✔ $1${NC}"; }
+warn() { echo -e "${YELLOW}! $1${NC}"; }
+fail() { echo -e "${RED}✖ $1${NC}"; }
+
+# =============================
+# Logging
+if [ "$(id -u)" -eq 0 ]; then
+  LOGFILE="/var/log/network_optimize.log"
+else
+  LOGFILE="$HOME/.local/state/network_optimize.log"
+  mkdir -p "$(dirname "$LOGFILE")"
+fi
+log() { echo "$(date '+%F %T') - $1" >>"$LOGFILE"; }
+
+# =============================
+# Root check
+if [ "$(id -u)" -ne 0 ]; then
+  if command -v sudo >/dev/null 2>&1; then
+    warn "Re-running with sudo..."
+    exec sudo "$0" "$@"
+  elif command -v doas >/dev/null 2>&1; then
+    warn "Re-running with doas..."
+    exec doas "$0" "$@"
+  else
+    fail "Root privileges required"
+    exit 1
+  fi
+fi
+
+# =============================
+# Dependency check
+for cmd in nmcli dig systemctl ping curl; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    fail "Missing required command: $cmd"
+    exit 1
+  fi
+done
+
+# =============================
+# Benchmark DNS providers
+section "Benchmarking DNS providers"
+
+# Define candidates
+declare -A dns_providers
+dns_providers["Quad9"]="9.9.9.9"
+dns_providers["Google"]="8.8.8.8"
+dns_providers["Cloudflare"]="1.1.1.1"
+
+results=""
+
+for name in "${!dns_providers[@]}"; do
+  server="${dns_providers[$name]}"
+  # Run dig and extract query time
+  ms=$(dig @"$server" google.com +stats 2>/dev/null | grep "Query time" | awk '{print $4}')
+  if [ -n "$ms" ]; then
+    results="$results$name:$ms\n"
+    echo "$name → ${ms}ms"
+  else
+    results="$results$name:9999\n"
+    warn "$name did not respond"
+  fi
+done
+
+# Sort by latency
+best=$(echo -e "$results" | sort -t: -k2 -n)
+
+echo -e "\nRanking (fastest → slowest):"
+echo -e "$best"
+
+# Extract best → worst order
+order=$(echo -e "$best" | awk -F: '{print $1}')
+
+# Map DNS addresses
+for prov in $order; do
+  case $prov in
+    "Quad9")
+      DNS4_ORDER="$DNS4_ORDER,9.9.9.9,149.112.112.112"
+      DNS6_ORDER="$DNS6_ORDER,2620:fe::fe,2620:fe::9"
+      ;;
+    "Google")
+      DNS4_ORDER="$DNS4_ORDER,8.8.8.8,8.8.4.4"
+      DNS6_ORDER="$DNS6_ORDER,2001:4860:4860::8888,2001:4860:4860::8844"
+      ;;
+    "Cloudflare")
+      DNS4_ORDER="$DNS4_ORDER,1.1.1.1,1.0.0.1"
+      DNS6_ORDER="$DNS6_ORDER,2606:4700:4700::1111,2606:4700:4700::1001"
+      ;;
+  esac
+done
+
+# Trim leading commas
+DNS4="${DNS4_ORDER#,}"
+DNS6="${DNS6_ORDER#,}"
+NAME="Auto-selected order: $order"
+
+success "Using DNS priority → $order"
+
+# =============================
+# Detect active connections
+section "Detecting active network connections"
+wifi_info=$(nmcli -t -f NAME,DEVICE,TYPE con show --active | awk -F: '$3 ~ /802-11-wireless|wifi/ {print $0}' || true)
+eth_info=$(nmcli -t -f NAME,DEVICE,TYPE con show --active | awk -F: '$3 ~ /802-3-ethernet|ethernet/ {print $0}' || true)
+
+wifi_conn=$(echo "$wifi_info" | cut -d: -f1)
+wifi_dev=$(echo "$wifi_info" | cut -d: -f2)
+eth_conn=$(echo "$eth_info" | cut -d: -f1)
+eth_dev=$(echo "$eth_info" | cut -d: -f2)
+
+if [ -z "$wifi_conn" ] && [ -z "$eth_conn" ]; then
+  warn "No active Wi-Fi or Ethernet connections found."
+  exit 0
+fi
+
+# =============================
+# Apply DNS
+apply_dns() {
+  conn=$1
+  dev=$2
+  section "Applying DNS to $conn ($dev)"
+  nmcli connection modify "$conn" ipv4.dns "$DNS4"
+  nmcli connection modify "$conn" ipv6.dns "$DNS6"
+  success "Applied DNS → $NAME"
+}
+
+[ -n "$wifi_conn" ] && apply_dns "$wifi_conn" "$wifi_dev"
+[ -n "$eth_conn" ] && apply_dns "$eth_conn" "$eth_dev"
+
+# =============================
+# Restart networking
+section "Restarting network services"
+if systemctl is-active --quiet NetworkManager; then
+  systemctl restart NetworkManager && success "NetworkManager restarted"
+elif systemctl is-active --quiet systemd-networkd; then
+  systemctl restart systemd-networkd && success "systemd-networkd restarted"
+fi
+
+sleep 2
+[ -n "$wifi_conn" ] && nmcli connection up "$wifi_conn" && success "Reactivated Wi-Fi"
+[ -n "$eth_conn" ] && nmcli connection up "$eth_conn" && success "Reactivated Ethernet"
+
+# =============================
+# Connectivity test
+section "Testing connectivity"
+ping -c 2 8.8.8.8 >/dev/null 2>&1 && success "Ping OK" || warn "Ping failed"
+curl -s --max-time 5 https://1.1.1.1 >/dev/null && success "HTTP OK" || warn "HTTP failed"
+
+echo -e "${GREEN}${BOLD}✔ DNS optimization complete!${NC}"
+log "Applied DNS order: $order"

@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+
+echo "[1/4] Setting vconsole font and keymap..."
+sudo tee /etc/vconsole.conf > /dev/null <<EOF
+KEYMAP=us
+FONT=solar24x32
+EOF
+
+echo "[2/4] Creating Dracula TTY color script..."
+sudo tee /etc/tty-colors.sh > /dev/null <<'EOF'
+#!/bin/sh
+# Dracula TTY palette
+if [ "$TERM" = "linux" ]; then
+    echo -en "\e]P0282a36" # black
+    echo -en "\e]P1ff5555" # red
+    echo -en "\e]P250fa7b" # green
+    echo -en "\e]P3f1fa8c" # yellow
+    echo -en "\e]P4bd93f9" # blue
+    echo -en "\e]P5ff79c6" # magenta
+    echo -en "\e]P68be9fd" # cyan
+    echo -en "\e]P7f8f8f2" # white
+    clear
+fi
+EOF
+sudo chmod +x /etc/tty-colors.sh
+
+echo "[3/4] Creating systemd service for TTY colors..."
+sudo tee /etc/systemd/system/tty-colors.service > /dev/null <<EOF
+[Unit]
+Description=Set TTY Colors
+Before=getty@tty1.service
+
+[Service]
+Type=oneshot
+ExecStart=/etc/tty-colors.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable tty-colors.service
+
+echo "[4/4] Setting X11/Wayland keyboard layout..."
+sudo localectl set-x11-keymap us pc105+inet "" terminate:ctrl_alt_bksp
+
+echo "✅ Done! Reboot to apply font + Dracula colors on TTY."

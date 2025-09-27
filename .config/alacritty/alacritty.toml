@@ -1,0 +1,53 @@
+[colors.primary]
+background = "#000000"
+
+[cursor]
+unfocused_hollow = false
+
+[cursor.style]
+shape = "Block"
+blinking = "Never"
+
+[cursor.vi_mode_style]
+shape = "Block"
+blinking = "Never"
+
+[env]
+TERM = "alacritty"
+WINIT_X11_SCALE_FACTOR = "1.0"
+
+[window]
+dynamic_title = true
+opacity = 0.90
+blur = true
+
+[window.padding]
+x = 10
+y = 10
+
+[colors]
+draw_bold_text_with_bright_colors = true
+transparent_background_colors = true
+
+[font]
+size = 22
+
+[font.normal]
+family = "MesloLGS Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "MesloLGS Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "MesloLGS Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "MesloLGS Nerd Font"
+style = "Bold Italic"
+
+[general]
+live_config_reload = true
+import = ["~/.cache/wal/colors-alacritty.toml"]

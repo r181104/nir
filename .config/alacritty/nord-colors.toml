@@ -1,0 +1,66 @@
+# Alacritty color scheme - Nord theme
+[colors.primary]
+background = "#000000"
+foreground = '#D8DEE9'   # nord4
+
+[colors.cursor]
+text = '#2E3440'         # background for contrast
+cursor = '#88C0D0'       # nord8
+
+[colors.vi_mode_cursor]
+text = '#2E3440'
+cursor = '#81A1C1'       # nord9
+
+[colors.search.matches]
+foreground = '#ECEFF4'   # nord6
+background = '#4C566A'   # nord3
+
+[colors.search.focused_match]
+foreground = '#2E3440'   # nord0
+background = '#81A1C1'   # nord9
+
+[colors.footer_bar]
+foreground = '#D8DEE9'   # nord4
+background = '#3B4252'   # nord1
+
+[colors.hints.start]
+foreground = '#2E3440'   # nord0
+background = '#8FBCBB'   # nord10
+
+[colors.hints.end]
+foreground = '#2E3440'
+background = '#8FBCBB'   # nord10
+
+[colors.selection]
+text = '#2E3440'
+background = '#81A1C1'   # nord9
+
+[colors.normal]
+black   = '#3B4252'      # nord1
+red     = '#BF616A'      # nord11
+green   = '#A3BE8C'      # nord14
+yellow  = '#EBCB8B'      # nord12
+blue    = '#5E81AC'      # nord13
+magenta = '#B48EAD'      # nord15
+cyan    = '#88C0D0'      # nord8
+white   = '#E5E9F0'      # nord5
+
+[colors.bright]
+black   = '#4C566A'      # nord3
+red     = '#BF616A'      # nord11
+green   = '#A3BE8C'      # nord14
+yellow  = '#EBCB8B'      # nord12
+blue    = '#5E81AC'      # nord13
+magenta = '#B48EAD'      # nord15
+cyan    = '#8FBCBB'      # nord10
+white   = '#ECEFF4'      # nord6
+
+[colors.dim]
+black   = '#2E3440'      # nord0
+red     = '#BF616A'      # nord11
+green   = '#A3BE8C'      # nord14
+yellow  = '#EBCB8B'      # nord12
+blue    = '#5E81AC'      # nord13
+magenta = '#B48EAD'      # nord15
+cyan    = '#88C0D0'      # nord8
+white   = '#D8DEE9'      # nord4

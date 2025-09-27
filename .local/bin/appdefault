@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# PDFs → Zathura
+xdg-mime default org.pwmt.zathura.desktop application/pdf
+
+# Brave as browser
+xdg-mime default org.pwmt.firefox.desktop text/html
+xdg-mime default org.pwmt.firefox.desktop x-scheme-handler/http
+xdg-mime default org.pwmt.firefox.desktop x-scheme-handler/https
+
+# Check
+xdg-mime query default application/pdf
+xdg-mime query default text/html
+xdg-mime query default x-scheme-handler/http
+xdg-mime query default x-scheme-handler/https
