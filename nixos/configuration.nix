@@ -74,6 +74,7 @@
     LC_PAPER = "en_IN";
     LC_TELEPHONE = "en_IN";
     LC_TIME = "en_IN";
+    LC_ALL = "en_IN";
   };
 
   system.stateVersion = "25.05";

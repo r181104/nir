@@ -4,7 +4,7 @@
   lib,
   ...
 }: {
-  services.xserver.videoDrivers = ["intel" "nvidia"];
+  services.xserver.videoDrivers = ["intel"];
   hardware.nvidia = {
     open = false;
     modesetting.enable = true;
