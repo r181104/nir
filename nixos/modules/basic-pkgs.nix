@@ -18,7 +18,7 @@
     wget
     curl
     fish
-    fzf
+    skim
     fd
     zoxide
     tmux
@@ -49,6 +49,7 @@
     # === Terminal emulators ===
     alacritty
     kitty
+    wezterm
 
     # === Browsers & search ===
     ddgr

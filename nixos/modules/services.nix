@@ -4,25 +4,15 @@
   ...
 }: {
   services.xserver.enable = true;
-  # services.xserver.desktopManager.budgie.enable = true;
-  services.gnome.gnome-keyring.enable = true;
-  services.displayManager.sddm = {
-    enable = true;
-    package = pkgs.kdePackages.sddm;
-    wayland.enable = true;
-    theme = "sddm-astronaut-theme";
-  };
+  services.getty.enable = false;
+  services.ly.enable = true;
   services.displayManager.defaultSession = "none+bspwm";
-  services.displayManager.sddm.extraPackages = with pkgs; [
-    kdePackages.qtmultimedia
-    kdePackages.qtsvg
-    kdePackages.qtdeclarative
-    kdePackages.qt5compat
-  ];
   services.xserver.xkb = {
     layout = "us";
     variant = "";
   };
+  # services.xserver.desktopManager.budgie.enable = true;
+  services.gnome.gnome-keyring.enable = true;
   services.printing.enable = true;
   services.openssh.enable = true;
   services.libinput.enable = true;
