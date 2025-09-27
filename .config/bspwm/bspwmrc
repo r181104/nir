@@ -43,9 +43,9 @@ wal -R &
 sh ~/nir/.local/bin/launch-poly &
 
 # === Cursor theme ===
-if [ -f "$HOME/.local/share/icons/Bibata-Modern-Ice/cursors/left_ptr" ]; then
+if [ -f "$HOME/.local/share/icons/Bibata-Modern-Amber/cursors/left_ptr" ]; then
   xsetroot -cursor_name left_ptr
-  xsetroot -xcf "$HOME/.local/share/icons/Bibata-Modern-Ice/cursors/left_ptr" 30
+  xsetroot -xcf "$HOME/.local/share/icons/Bibata-Modern-Amber/cursors/left_ptr" 30
 fi
 
 # === bspwm setup ===
