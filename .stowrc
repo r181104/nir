@@ -3,7 +3,7 @@
 --ignore=screenshots
 --ignore=nthng
 --ignore=scripts
---ignore=png
+--ignore=pictrs
 --ignore=guide
 --ignore=nixos
 --ignore=README
