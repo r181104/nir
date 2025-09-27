@@ -39,7 +39,7 @@
   };
   hardware.bluetooth.enable = true;
 
-  users.defaultUserShell = pkgs.fish;
+  users.defaultUserShell = pkgs.bash;
   users.users.sten = {
     isNormalUser = true;
     shell = pkgs.fish;
