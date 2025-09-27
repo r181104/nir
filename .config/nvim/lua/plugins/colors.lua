@@ -8,7 +8,7 @@ return {
 			style = "storm", -- The theme comes in three styles, `storm`, a darker variant `night` and `day`
 			light_style = "dark", -- The theme is used when the background is set to light
 			transparent = true,
-			terminal_colors = false,
+			terminal_colors = true,
 			styles = {
 				comments = { italic = true },
 				keywords = { italic = true },

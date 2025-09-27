@@ -5,7 +5,6 @@
 }: {
   services.xserver.enable = true;
   # services.xserver.desktopManager.budgie.enable = true;
-  services.xserver.videoDrivers = ["intel"];
   services.gnome.gnome-keyring.enable = true;
   services.displayManager.sddm = {
     enable = true;
