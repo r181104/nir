@@ -4,8 +4,7 @@
   ...
 }: {
   services.xserver.enable = true;
-  services.getty.enable = false;
-  services.ly.enable = true;
+  services.displayManager.ly.enable = true;
   services.displayManager.defaultSession = "none+bspwm";
   services.xserver.xkb = {
     layout = "us";

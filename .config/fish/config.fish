@@ -9,7 +9,7 @@ end
 #   Core Environment Variables
 # ==============================
 set -gx LANG en_IN.UTF-8
-set -gx BROWSER "brave"
+set -gx BROWSER "firefox"
 set -gx TERM "alacritty"
 set -gx EDITOR "neovide"
 set -gx COLORTERM "truecolor"
@@ -33,10 +33,6 @@ for p in /usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin
     end
 end
 
-# NOTE: Java environment (auto-detect JDK)
-# set -Ux JAVA_HOME (archlinux-java get | string replace 'java-' '/usr/lib/jvm/java-')
-# set -Ux PATH $JAVA_HOME/bin $PATH
-
 # NOTE: ==============================
 #   Auth & Agents
 # ==============================
@@ -57,35 +53,6 @@ end
 set -g fish_key_bindings fish_default_key_bindings
 bind \en down-or-search
 bind \ep up-or-search
-
-# NOTE: ==============================
-#   Package Manager aliases
-# ==============================
-if type -q paru
-    alias i 'paru --noconfirm --needed -S'
-    alias u 'paru --noconfirm -Syu'
-    alias r 'paru -Rns'
-    alias s 'paru -Ss'
-    alias remove-orphaned 'sudo pacman -Rns (pacman -Qtdq) && paru -Rns (pacman -Qtdq)'
-    alias aggressively-clear-cache 'sudo pacman -Scc && paru -Scc'
-    alias clear-cache 'sudo pacman -Sc && paru -Sc'
-else if type -q yay
-    alias i 'yay --noconfirm --needed -S'
-    alias u 'yay --noconfirm -Syu'
-    alias r 'yay -Rns'
-    alias s 'yay -Ss'
-    alias remove-orphaned 'sudo pacman -Rns (pacman -Qtdq) && yay -Rns (pacman -Qtdq)'
-    alias aggressively-clear-cache 'sudo pacman -Scc && yay -Scc'
-    alias clear-cache 'sudo pacman -Sc && yay -Sc'
-else
-    alias i 'sudo pacman --noconfirm --needed -S'
-    alias u 'sudo pacman --noconfirm -Syu'
-    alias r 'sudo pacman -Rns'
-    alias s 'sudo pacman -Ss'
-    alias remove-orphaned 'sudo pacman -Rns (pacman -Qtdq)'
-    alias aggressively-clear-cache 'sudo pacman -Scc'
-    alias clear-cache 'sudo pacman -Sc'
-end
 
 # NOTE: ==============================
 #   General aliases
@@ -219,12 +186,4 @@ if command -q fzf
     bind \er fzf_nvim
     bind \ed fzf-cd-widget
     bind \et fzf
-end
-
-# Auto-start X on TTY1, once per login
-if status --is-interactive; and not set -q DISPLAY; and tty | grep -q '/dev/tty1'; and not set -q SSH_CONNECTION
-    if not test -f /tmp/.xsession_started_$USER
-        touch /tmp/.xsession_started_$USER
-        startx >/dev/null 2>&1 || echo "startx failed, check ~/.xsession-errors"
-    end
 end
