@@ -6,6 +6,7 @@ config.window_background_opacity = 8.0
 config.font = wezterm.font("MesloLGS Nerd Font")
 config.font_size = 22
 config.color_scheme = "Dracula"
+config.window_decorations = "NONE"
 config.leader = { key = "Space", mods = "ALT", timeout_milliseconds = 1000 }
 config.keys = {
 	{
