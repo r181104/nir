@@ -1,5 +1,5 @@
-function fzf_nvim
-    set -l selected_file (fzf --reverse --ansi \
+function find_file
+    set -l selected_file (sk --reverse --ansi \
         --prompt="📝 Open in nvim: " \
         --preview 'eza --icons --color=always --long --git --group --modified {} 2>/dev/null' \
         --preview-window=right:60%:wrap)

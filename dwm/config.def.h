@@ -1,8 +1,3 @@
-static const char *const autostart[] = {
-	"sh", "-c", "./autostart", NULL,
-	NULL
-};
-
 /* Window & Bar settings */
 static const unsigned int borderpx  = 4;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -25,6 +20,11 @@ static const char *colors[][3] = {
     /*               fg           bg           border   */
     [SchemeNorm] = { color4_m,    color0_m,    color2_m },    // normal text: light on dark
     [SchemeSel]  = { color6_m,    color8_m,    color13_m },   // selected: bright text on icy bg with orange border
+};
+
+static const char *const autostart[] = {
+    	"sh", "-c", "while :; do autostart -; sleep 60; done", NULL,
+	NULL
 };
 
 static const char *tags[] = {

@@ -85,7 +85,7 @@ alias less 'less -R'
 alias h "history | grep "
 alias p "ps aux | grep "
 alias topcpu "ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
-alias ffind "fzf --preview='bat {}' --bind 'enter:execute(nvim {})'"
+alias ffind "sk --preview='bat {}' --bind 'enter:execute(nvim {})'"
 alias f "find . | grep "
 alias openports 'netstat -tulanp'
 
@@ -182,8 +182,7 @@ end
 # NOTE: ==============================
 #   FZF
 # ==============================
-if command -q fzf
-    bind \er fzf_nvim
-    bind \ed fzf-cd-widget
-    bind \et fzf
+if command -q sk
+    bind \er find_file
+    bind \et sk
 end
