@@ -1,3 +1,3 @@
 function dwmmake
-    command sudo nix profile install ~/nir/rwm/.#rwm
+    command sudo nix profile install ~/nir/dwm/.#rwm
 end

@@ -1599,7 +1599,7 @@ void setup(void) {
   XSelectInput(dpy, root, wa.event_mask);
   grabkeys();
   focus(NULL);
-  system("./autostart &");
+  system("autostart &");
 }
 
 void seturgent(Client *c, int urg) {
