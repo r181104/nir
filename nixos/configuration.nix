@@ -14,7 +14,7 @@
     ./modules/dev.nix
     ./modules/windowmanager.nix
     ./modules/graphics.nix
-    ./modules/gaming.nix
+    # ./modules/gaming.nix
     ./modules/auto-upgrade.nix
   ];
 
