@@ -5,8 +5,8 @@
 }: {
   services.xserver = {
     enable = true;
-    autoReplayDelay = 200;
-    autoReplayInterval = 50;
+    autoRepeatDelay = 200;
+    autoRepeatInterval = 50;
   };
   services.xserver.windowManager.bspwm.enable = true;
   services.xserver.windowManager.dwm = {
