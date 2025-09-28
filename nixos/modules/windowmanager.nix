@@ -70,6 +70,7 @@
     xorg.libXdamage.dev
     xorg.libXfixes.dev
     xorg.libXcomposite.dev
+    pkg-config
 
     # === GUI tools ===
     lxappearance

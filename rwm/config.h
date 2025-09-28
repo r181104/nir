@@ -99,7 +99,7 @@ static const char *menu[] = {
 };
 
 static const char *termcmd[]  = { "alacritty", NULL };
-static const char *browser0[]  = { "firefox", "--no-remote", NULL };
+static const char *browser0[]  = { "firefox-developer-edition", "--no-remote", NULL };
 static const char *browser1[]  = { "brave",  "--no-sandbox", "--disable-extensions", "--disable-plugins", "--disable-background-networking", "--disk-cache-dir=/tmp/brave-cache", "--new-window about:blank", NULL };
 static const char *incvol[] = {"/usr/bin/amixer", "set", "Master", "5%+", NULL};
 static const char *decvol[] = {"/usr/bin/amixer", "set", "Master", "5%-", NULL};
