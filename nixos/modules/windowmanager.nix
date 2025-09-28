@@ -12,7 +12,7 @@
   services.xserver.windowManager.dwm = {
     enable = true;
     package = pkgs.dwm.overrideAttrs {
-      src = ./../../dwm;
+      src = ./../../rwm;
     };
   };
   services.displayManager.defaultSession = "none+bspwm";
@@ -38,12 +38,38 @@
 
     # === Xorg server & utilities ===
     xorg.xorgserver
+    xorg.xorgproto
+    xorg.xauth
     xorg.xinit
     xorg.xrandr
-    xorg.xsetroot
-    xorg.xprop
     xorg.xev
+    xorg.xset
+    xorg.xsetroot
+    xorg.xkbcomp
+    xorg.xmessage
+    xorg.xprop
+    xorg.xwininfo
     xorg.xdpyinfo
+    xorg.xhost
+    xorg.xmodmap
+    xorg.xcursorgen
+    xorg.xf86videointel
+    xorg.xf86videonouveau
+    xorg.xf86videoamdgpu
+    xorg.xf86videoati
+    xorg.xf86videovesa
+    xorg.xf86inputlibinput
+    xorg.libX11.dev
+    xorg.libXext.dev
+    xorg.libXrender.dev
+    xorg.libXrandr.dev
+    xorg.libXft.dev
+    xorg.libXi.dev
+    xorg.libXinerama.dev
+    xorg.libXcursor.dev
+    xorg.libXdamage.dev
+    xorg.libXfixes.dev
+    xorg.libXcomposite.dev
 
     # === GUI tools ===
     lxappearance

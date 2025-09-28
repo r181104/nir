@@ -16,6 +16,7 @@
     maven
     gradle
     nodePackages.nodejs
+    gnumake
 
     # === Language Server Protocols ===
     pyright
