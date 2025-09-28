@@ -7,35 +7,20 @@
   home.username = "sten";
   home.homeDirectory = "/home/sten";
 
-  # === Enable Home Manager modules ===
+  # === Enable Home Manager ===
   programs.home-manager.enable = true;
-  #
-  # # === Terminal ===
-  # programs.tmux.enable = true;
-  # programs.tmux.plugins = [
-  #   {
-  #     name = "tmux-plugins/tpm";
-  #   }
-  #   {
-  #     name = "tmux-plugins/tmux-sensible";
-  #   }
-  # ];
-  #
-  # # === Editor ===
-  # programs.neovim.enable = true;
-  # programs.neovim.vimAlias = true;
-  # programs.neovim.extraConfig = ''
-  #   set number
-  #   syntax on
-  #   set mouse=a
-  # '';
+  home.stateVersion = "23.05";
+
+  # === Shell setup ===
+  # programs.zsh.enable = true;
+  # programs.zsh.ohMyZsh.enable = true;
+  # programs.zsh.ohMyZsh.theme = "agnoster";
+  # programs.zsh.ohMyZsh.plugins = [ "git" "z" "extract" ];
 
   # === Git config ===
-  programs.git = {
-    enable = true;
-    userName = "r181104";
-    userEmail = "sten181104@gmail.com";
-  };
+  programs.git.enable = true;
+  programs.git.userName = "r181104";
+  programs.git.userEmail = "sten181104@gmail.com";
 
   # === Packages ===
   # home.packages = with pkgs; [
@@ -51,13 +36,31 @@
   #   tmux
   #   zoxide
   # ];
-
-  # === X11 / Window Manager ===
-  # programs.xserver.enable = true;
-  # programs.xserver.windowManager.bspwm.enable = true;
-  # programs.xserver.desktopManager.plasma5.enable = false;
   #
-  # # === Fonts & Cursor ===
+  # === Terminal multiplexer ===
+  # programs.tmux.enable = true;
+  # programs.tmux.plugins = [
+  #   { name = "tmux-plugins/tpm"; }
+  #   { name = "tmux-plugins/tmux-sensible"; }
+  # ];
+
+  # === Editor ===
+  # programs.neovim.enable = true;
+  # programs.neovim.vimAlias = true;
+  # programs.neovim.extraConfig = ''
+  #   set number
+  #   syntax on
+  #   set mouse=a
+  # '';
+
+  # === Environment variables ===
+  # home.sessionVariables = {
+  #   EDITOR = "nvim";
+  #   LANG = "en_IN.UTF-8";
+  #   LC_ALL = "en_IN.UTF-8";
+  # };
+
+  # === Fonts & Cursor ===
   # fonts.fonts = with pkgs; [
   #   noto-fonts
   #   noto-fonts-cjk
@@ -65,20 +68,13 @@
   # ];
   # xsession.cursor = "Bibata-Modern-Ice";
   #
-  # # === Environment variables ===
-  # home.sessionVariables = {
-  #   EDITOR = "nvim";
-  #   LANG = "en_IN.UTF-8";
-  #   LC_ALL = "en_IN.UTF-8";
-  # };
-  #
   # # === Notifications ===
   # programs.dunst.enable = true;
 
-  # === Misc ===
-  home.file.".bashrc".text = ''
-      if [ -f ~/.bashrc ]; then
-      source ~/.bashrc
-    fi
+  # === Misc / Bash fix ===
+  home.file.".bashrc.local".text = ''
+    if [ -f ~/.bashrc ]; then
+        source ~/.bashrc
+        fi
   '';
 }
