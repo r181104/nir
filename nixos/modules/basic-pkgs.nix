@@ -48,7 +48,6 @@
 
     # === Terminal emulators ===
     alacritty
-    kitty
     wezterm
 
     # === Browsers & search ===
