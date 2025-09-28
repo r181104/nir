@@ -1,28 +1,32 @@
 {
-  description = "RWM (dwm fork) window manager flake";
+  description = "RWM window manager (rwm fork) flake";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = {
     self,
     nixpkgs,
-  }: {
-    packages.x86_64-linux.rwm = nixpkgs.legacyPackages.x86_64-linux.stdenv.mkDerivation rec {
+  }: let
+    pkgs = import nixpkgs {system = "x86_64-linux";};
+  in {
+    packages.x86_64-linux.rwm = pkgs.stdenv.mkDerivation rec {
       pname = "rwm";
       version = "6.6";
 
       src = ./.;
 
-      nativeBuildInputs = [nixpkgs.legacyPackages.x86_64-linux.pkg-config];
+      nativeBuildInputs = [pkgs.pkg-config];
       buildInputs = [
-        nixpkgs.legacyPackages.x86_64-linux.xorg.libX11
-        nixpkgs.legacyPackages.x86_64-linux.xorg.libXft
-        nixpkgs.legacyPackages.x86_64-linux.xorg.libXinerama
-        nixpkgs.legacyPackages.x86_64-linux.fontconfig
-        nixpkgs.legacyPackages.x86_64-linux.freetype
+        pkgs.xorg.libX11
+        pkgs.xorg.libXft
+        pkgs.xorg.libXinerama
+        pkgs.fontconfig
+        pkgs.freetype
       ];
+
+      shellHook = ''
+        export PKG_CONFIG_PATH="${pkgs.xorg.libX11}/lib/pkgconfig:${pkgs.xorg.libXft}/lib/pkgconfig:${pkgs.xorg.libXinerama}/lib/pkgconfig:${pkgs.fontconfig}/lib/pkgconfig:${pkgs.freetype}/lib/pkgconfig"
+      '';
 
       buildPhase = ''
         make clean
@@ -31,24 +35,13 @@
 
       installPhase = ''
         mkdir -p $out/bin
-        cp dwm $out/bin/
+        cp rwm $out/bin/
       '';
 
-      meta = with nixpkgs.lib; {
-        description = "RWM window manager (dwm fork)";
+      meta = with pkgs.lib; {
+        description = "RWM window manager (rwm fork) with full X11/Xft/Fontconfig support";
         license = licenses.bsd3;
       };
-    };
-
-    devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-      buildInputs = [
-        nixpkgs.legacyPackages.x86_64-linux.pkg-config
-        nixpkgs.legacyPackages.x86_64-linux.xorg.libX11
-        nixpkgs.legacyPackages.x86_64-linux.xorg.libXft
-        nixpkgs.legacyPackages.x86_64-linux.xorg.libXinerama
-        nixpkgs.legacyPackages.x86_64-linux.fontconfig
-        nixpkgs.legacyPackages.x86_64-linux.freetype
-      ];
     };
   };
 }
