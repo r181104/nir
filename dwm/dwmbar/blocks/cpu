@@ -1,0 +1,2 @@
+#!/bin/sh
+top -bn1 | grep "Cpu(s)" | awk '{print "CPU:" int($2+$4+$6)"%"}'

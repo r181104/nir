@@ -30,7 +30,6 @@
     stylua
     black
     isort
-    prettier
     gofumpt
     goimports-reviser
     shfmt

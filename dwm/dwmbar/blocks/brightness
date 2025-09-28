@@ -1,0 +1,6 @@
+#!/bin/sh
+# Screen brightness in percentage
+bright=$(brightnessctl g)
+max=$(brightnessctl m)
+perc=$((bright * 100 / max))
+echo -e "💡 ${perc}%"

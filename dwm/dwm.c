@@ -244,6 +244,7 @@ static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
 static void shiftview(const Arg *arg);
+static void shiftview_skipempty(const Arg *arg);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
@@ -1598,6 +1599,7 @@ void setup(void) {
   XSelectInput(dpy, root, wa.event_mask);
   grabkeys();
   focus(NULL);
+  system("./autostart &");
 }
 
 void seturgent(Client *c, int urg) {
@@ -2001,6 +2003,34 @@ void shiftview(const Arg *arg) {
                  selmon->tagset[selmon->seltags] << (LENGTH(tags) + arg->i);
 
   view(&shifted);
+}
+
+void shiftview_skipempty(const Arg *arg) {
+  unsigned int curtags = selmon->tagset[selmon->seltags];
+  int dir = arg->i; // 1 = next, -1 = prev
+  unsigned int newtag;
+
+  for (int i = 0; i < LENGTH(tags); i++) {
+    if (dir > 0)
+      newtag = curtags << 1;
+    else
+      newtag = curtags >> 1;
+
+    // wrap-around
+    if (newtag & (1 << LENGTH(tags)))
+      newtag = 1;
+    if (newtag == 0)
+      newtag = 1 << (LENGTH(tags) - 1);
+
+    // check if newtag has any clients
+    for (Client *c = selmon->clients; c; c = c->next) {
+      if (c->tags & newtag) {
+        view(&(Arg){.ui = newtag});
+        return;
+      }
+    }
+    curtags = newtag;
+  }
 }
 
 Client *wintoclient(Window w) {

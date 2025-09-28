@@ -74,7 +74,6 @@
   security.polkit.enable = true;
   # Enable shells
   programs.fish.enable = true;
-  programs.bash.enable = true;
   # Enable Firefox
   programs.firefox.enable = true;
   # Enable nm-applet

@@ -1,30 +1,51 @@
 {
-  description = "Clean NixOS flake without Home Manager";
+  description = "Hybrid NixOS flake with stable, some unstable packages, and home-manager";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
+
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
   };
 
-  outputs = inputs @ {
-    nixpkgs,
+  outputs = {
+    self,
+    nixpkgs-stable,
+    nixpkgs-unstable,
     home-manager,
     ...
-  }: {
+  }: let
+    system = "x86_64-linux";
+
+    stablePkgs = import nixpkgs-stable {inherit system;};
+    unstablePkgs = import nixpkgs-unstable {inherit system;};
+  in {
     nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+      nixos = nixpkgs-stable.lib.nixosSystem {
+        inherit system;
         modules = [
           ./configuration.nix
           home-manager.nixosModules.home-manager
-          {
+          ({
+            config,
+            pkgs,
+            ...
+          }: {
+            environment.systemPackages = with pkgs;
+              [
+                vim
+              ]
+              ++ [
+                unstablePkgs.hello
+                unstablePkgs.prettier
+              ];
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.sten = ./home.nix;
-          }
+          })
         ];
       };
     };
