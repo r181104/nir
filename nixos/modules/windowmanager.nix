@@ -65,12 +65,6 @@
     xorg.libXrandr.dev
     xorg.libXft.dev
     xorg.libXi.dev
-    xorg.libXinerama.dev
-    xorg.libXcursor.dev
-    xorg.libXdamage.dev
-    xorg.libXfixes.dev
-    xorg.libXcomposite.dev
-    pkg-config
 
     # === GUI tools ===
     lxappearance

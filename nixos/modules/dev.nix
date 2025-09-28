@@ -17,6 +17,7 @@
     gradle
     nodePackages.nodejs
     gnumake
+    pkg-config
 
     # === Language Server Protocols ===
     pyright
