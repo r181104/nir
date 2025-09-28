@@ -12,7 +12,7 @@
     ./modules/audio.nix
     ./modules/video.nix
     ./modules/dev.nix
-    ./modules/bspwm.nix
+    ./modules/windowmanager.nix
     ./modules/graphics.nix
     ./modules/gaming.nix
     ./modules/auto-upgrade.nix
