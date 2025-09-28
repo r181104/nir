@@ -3,20 +3,13 @@
 
   inputs = {
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
-
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
   };
 
   outputs = {
     self,
     nixpkgs-stable,
     nixpkgs-unstable,
-    home-manager,
     ...
   }: let
     system = "x86_64-linux";
@@ -29,7 +22,6 @@
         inherit system;
         modules = [
           ./configuration.nix
-          home-manager.nixosModules.home-manager
           ({
             config,
             pkgs,
@@ -43,8 +35,6 @@
                 unstablePkgs.hello
                 unstablePkgs.prettier
               ];
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
           })
         ];
       };
