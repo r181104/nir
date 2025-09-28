@@ -3,13 +3,7 @@
   pkgs,
   ...
 }: {
-  services.xserver = {
-      enable = true;
-      autoReplayDelay = 200;
-      autoReplayInterval = 50;
-  };
   services.displayManager.ly.enable = true;
-  services.displayManager.defaultSession = "none+bspwm";
   services.xserver.xkb = {
     layout = "us";
     variant = "";

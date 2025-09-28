@@ -3,9 +3,19 @@
   pkgs,
   ...
 }: {
-  # Enable bspwm window manager
+  services.xserver = {
+    enable = true;
+    autoReplayDelay = 200;
+    autoReplayInterval = 50;
+  };
   services.xserver.windowManager.bspwm.enable = true;
-  # System packages
+  services.xserver.windowManager.dwm = {
+    enable = true;
+    package = pkgs.dwm.overrideAttrs {
+      src = ./../../dwm;
+    };
+  };
+  services.displayManager.defaultSession = "none+bspwm";
   environment.systemPackages = with pkgs; [
     # === Window manager & hotkey daemon ===
     bspwm
