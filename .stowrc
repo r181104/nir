@@ -4,7 +4,7 @@
 --ignore=nthng
 --ignore=scripts
 --ignore=pictrs
---ignore=rwm
+--ignore=dwm
 --ignore=guide
 --ignore=nixos
 --ignore=README
