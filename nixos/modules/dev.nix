@@ -33,7 +33,7 @@
     gofumpt
     goimports-reviser
     shfmt
-    clang
+    clang-tools
     sqlfluff
     yamlfmt
     prettierd

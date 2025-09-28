@@ -1,4 +1,7 @@
-#include <stdlib.h>
+static const char *const autostart[] = {
+	"sh", "-c", "./autostart", NULL,
+	NULL
+};
 
 /* Window & Bar settings */
 static const unsigned int borderpx  = 4;        /* border pixel of windows */

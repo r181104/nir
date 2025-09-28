@@ -53,7 +53,7 @@ return {
 		vim.lsp.enable({
 			"lua_ls",
 			"pyright",
-            "clangd",
+			"clangd",
 			"jdtls",
 			"rust_analyzer",
 			"vtsls",
