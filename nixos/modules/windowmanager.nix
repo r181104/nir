@@ -12,7 +12,7 @@
   services.xserver.windowManager.dwm = {
     enable = true;
     package = pkgs.dwm.overrideAttrs {
-      src = ./../../rwm;
+      src = ./../../dwm;
     };
   };
   services.displayManager.defaultSession = "none+bspwm";
@@ -35,6 +35,7 @@
 
     # === Input & gestures ===
     libinput-gestures
+    xdotool
 
     # === Xorg server & utilities ===
     xorg.xorgserver

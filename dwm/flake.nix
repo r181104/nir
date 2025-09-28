@@ -1,5 +1,5 @@
 {
-  description = "RWM window manager (rwm fork) flake";
+  description = "dwm window manager (dwm fork) flake";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -9,8 +9,8 @@
   }: let
     pkgs = import nixpkgs {system = "x86_64-linux";};
   in {
-    packages.x86_64-linux.rwm = pkgs.stdenv.mkDerivation rec {
-      pname = "rwm";
+    packages.x86_64-linux.dwm = pkgs.stdenv.mkDerivation rec {
+      pname = "dwm";
       version = "6.6";
 
       src = ./.;
@@ -35,11 +35,11 @@
 
       installPhase = ''
         mkdir -p $out/bin
-        cp rwm $out/bin/
+        cp dwm $out/bin/
       '';
 
       meta = with pkgs.lib; {
-        description = "RWM window manager (rwm fork) with full X11/Xft/Fontconfig support";
+        description = "dwm window manager (dwm fork) with full X11/Xft/Fontconfig support";
         license = licenses.bsd3;
       };
     };

@@ -3,7 +3,7 @@ include config.mk
 SRC = drw.c dwm.c util.c
 OBJ = ${SRC:.c=.o}
 
-all: rwm
+all: dwm
 
 # Compile .c to .o
 .c.o:
@@ -17,36 +17,36 @@ config.h:
 	cp config.def.h $@
 
 # Link the binary
-rwm: ${OBJ}
+dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 # Clean build artifacts
 clean:
-	rm -f rwm ${OBJ} rwm-${VERSION}.tar.gz
+	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
 	if [ -f config.h ]; then rm config.h; fi
 
 # Create distributable tarball
 dist: clean
-	mkdir -p rwm-${VERSION}
+	mkdir -p dwm-${VERSION}
 	cp -R LICENSE Makefile README config.def.h config.mk \
-		rwm.1 drw.h util.h ${SRC} rwm.png transient.c rwm-${VERSION}
-	tar -cf rwm-${VERSION}.tar rwm-${VERSION}
-	gzip rwm-${VERSION}.tar
-	rm -rf rwm-${VERSION}
+		dwm.1 drw.h util.h ${SRC} dwm.png transient.c dwm-${VERSION}
+	tar -cf dwm-${VERSION}.tar dwm-${VERSION}
+	gzip dwm-${VERSION}.tar
+	rm -rf dwm-${VERSION}
 
 # Install binary and man page
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
-	cp -f rwm ${DESTDIR}${PREFIX}/bin
-	chmod 755 ${DESTDIR}${PREFIX}/bin/rwm
+	cp -f dwm ${DESTDIR}${PREFIX}/bin
+	chmod 755 ${DESTDIR}${PREFIX}/bin/dwm
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
-	sed "s/VERSION/${VERSION}/g" < rwm.1 > ${DESTDIR}${MANPREFIX}/man1/rwm.1
-	chmod 644 ${DESTDIR}${MANPREFIX}/man1/rwm.1
+	sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
+	chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 # Uninstall binary and man page
 uninstall:
-	rm -f ${DESTDIR}${PREFIX}/bin/rwm \
-		${DESTDIR}${MANPREFIX}/man1/rwm.1
+	rm -f ${DESTDIR}${PREFIX}/bin/dwm \
+		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 .PHONY: all clean dist install uninstall
 

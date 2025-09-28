@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sh -c ~/nir/rwm/autostart
+sh -c ~/nir/dwm/autostart
