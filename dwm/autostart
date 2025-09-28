@@ -13,7 +13,7 @@ xset s off -dpms
 # === Numlock & gestures ===
 command -v numlockx >/dev/null 2>&1 && numlockx &
 command -v libinput-gestures >/dev/null 2>&1 &&
-  pgrep -x libinput-gestures >/dev/null || libinput-gestures &
+  killall -x libinput-gestures >/dev/null || libinput-gestures &
 
 # === Touchpad & TrackPoint settings ===
 if xinput list "Elan Touchpad" >/dev/null 2>&1; then
