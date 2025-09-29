@@ -1,5 +1,5 @@
 super + Return
-	alacritty
+	wezterm
 
 super + shift + Return
 	kitty
