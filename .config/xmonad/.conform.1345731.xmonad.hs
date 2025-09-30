@@ -4,7 +4,11 @@ import System.Exit
 import XMonad
 import XMonad.Actions.CycleWS
 import XMonad.Actions.Navigation2D
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.NoBorders
 import qualified XMonad.StackSet as W
 import XMonad.Util.SpawnOnce
 
@@ -54,6 +58,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) =
             "xmonad --recompile; xmonad --restart; dunstify 'XMONAD RELOADED'")
       , ( (modm .|. shiftMask, xK_slash)
         , spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
+      -- Hard fullscreen toggle (true fullscreen)
+      , ( (modm, xK_f)
+        , withFocused $ \w -> windows (W.float w (W.RationalRect 0 0 1 1)))
       -- Directional navigation with Alt
       , ((mod1Mask, xK_l), windowGo R True)
       , ((mod1Mask, xK_h), windowGo L True)
@@ -77,7 +84,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) =
       , (\w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster))
     ]
 
-myLayout = tiled ||| Mirror tiled ||| Full
+myLayout =
+  avoidStruts $ smartBorders $ fullscreenFull (tiled ||| Mirror tiled ||| Full)
   where
     tiled = Tall nmaster delta ratio
     nmaster = 1
@@ -86,7 +94,8 @@ myLayout = tiled ||| Mirror tiled ||| Full
 
 myManageHook =
   composeAll
-    [ className =? "MPlayer" --> doFloat
+    [ isFullscreen --> doFullFloat
+    , className =? "MPlayer" --> doFloat
     , className =? "Gimp" --> doFloat
     , resource =? "desktop_window" --> doIgnore
     , resource =? "kdesktop" --> doIgnore
@@ -102,7 +111,7 @@ myStartupHook = do
   spawnOnce "xset s off -dpms"
   spawnOnce "autostart"
 
-main = xmonad defaults
+main = xmonad $ ewmhFullscreen $ ewmh defaults
 
 defaults =
   def

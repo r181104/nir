@@ -1,40 +1,41 @@
 #!/bin/sh
 
-# === NVIDIA PRIME / hybrid graphics (if present) ===
-if xrandr --listproviders 2>/dev/null | grep -q "NVIDIA"; then
-  xrandr --setprovideroutputsource modesetting NVIDIA-0
-fi
+# === Monitor setup (auto-detect connected) ===
+monitors
 
 # === Keyboard & Mouse ===
 xset r rate 200 50
 xset -b
 xset s off -dpms
 
-# === Numlock & gestures ===
+# === Numlock & Gestures ===
 command -v numlockx >/dev/null 2>&1 && numlockx &
 command -v libinput-gestures >/dev/null 2>&1 &&
-  killall -x libinput-gestures >/dev/null || libinput-gestures &
+  pkill -f .libinput-gestu >/dev/null || libinput-gestures &
 
-# === Touchpad & TrackPoint settings ===
-if xinput list "Elan Touchpad" >/dev/null 2>&1; then
-  xinput --set-prop "Elan Touchpad" "libinput Tapping Enabled" 1
-  xinput --set-prop "Elan Touchpad" "libinput Natural Scrolling Enabled" 0
-  xinput --set-prop "Elan Touchpad" "libinput Disable While Typing Enabled" 1
-  xinput --set-prop "Elan Touchpad" "libinput Accel Speed" 0.3
-fi
-
-if xinput list "Elan TrackPoint" >/dev/null 2>&1; then
-  xinput --set-prop "Elan TrackPoint" "libinput Accel Speed" 0.0
-fi
-
-# === Monitor setup ===
-for output in eDP1 eDP2 eDP3 eDP4 eDP-1 eDP-2 eDP-3 eDP-4; do
-  xrandr --output "$output" --mode 1920x1080 --rate 60.00 2>/dev/null
+# === Touchpad & TrackPoint (auto-detect) ===
+for id in $(xinput list --id-only | xargs -n1 xinput list-props | grep -B1 "Touchpad\|TrackPoint" | grep "id=" | awk '{print $4}'); do
+  name=$(xinput list "$id" | grep -o '".*"' | tr -d '"')
+  if echo "$name" | grep -qi touchpad; then
+    xinput set-prop "$id" "libinput Tapping Enabled" 1
+    xinput set-prop "$id" "libinput Natural Scrolling Enabled" 0
+    xinput set-prop "$id" "libinput Disable While Typing Enabled" 1
+    xinput set-prop "$id" "libinput Accel Speed" 0.3
+  elif echo "$name" | grep -qi trackpoint; then
+    xinput set-prop "$id" "libinput Accel Speed" 0.0
+  fi
 done
 
-# === Start background apps only if not already running ===
-pgrep -x dunst >/dev/null || dunst &
-pgrep -x picom >/dev/null || picom &
+# === Background apps (no duplicates) ===
+for app in dunst picom sxhkd nm-applet blueman-applet; do
+  pgrep -x "$app" >/dev/null || $app &
+done
 
-# === Wallpaper ===
-[ -f ~/.fehbg ] && ~/.fehbg &
+# === Wallpaper & Polybar ===
+wal -R &
+
+# === Cursor theme ===
+if [ -f "$HOME/.local/share/icons/Bibata-Modern-Amber/cursors/left_ptr" ]; then
+  xsetroot -cursor_name left_ptr
+  xsetroot -xcf "$HOME/.local/share/icons/Bibata-Modern-Amber/cursors/left_ptr" 30
+fi

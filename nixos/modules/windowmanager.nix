@@ -16,7 +16,7 @@
     haskellPackages = pkgs.haskellPackages;
   };
   boot.initrd.systemd.dbus.enable = true;
-  services.displayManager.defaultSession = "none+bspwm";
+  services.displayManager.defaultSession = "none+xmonad";
   environment.systemPackages = with pkgs; [
     # === Compositing, notifications, and status bar ===
     feh
