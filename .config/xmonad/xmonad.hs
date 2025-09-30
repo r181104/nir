@@ -1,12 +1,17 @@
+import Control.Monad.IO.Class
 import qualified Data.Map as M
 import Data.Monoid
+import Graphics.X11.Xlib
 import System.Exit
 import XMonad
 import XMonad.Actions.CycleWS
 import XMonad.Actions.Navigation2D
+import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet as W
+import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
+import XMonad.Util.XUtils
 
 myTerminal = "wezterm"
 
@@ -16,7 +21,7 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth = 1
+myBorderWidth = 3
 
 myModMask = mod4Mask
 
@@ -26,21 +31,30 @@ myNormalBorderColor = "#dddddd"
 
 myFocusedBorderColor = "#ff0000"
 
--- Toggle between floating fullscreen and tiling
 toggleFull :: X ()
 toggleFull =
-  withFocused $ \windowId -> do
+  withFocused $ \w -> do
     floats <- gets (W.floating . windowset)
-    if windowId `M.member` floats
-      then windows (W.sink windowId)
-      else windows $ W.float windowId (W.RationalRect 0 0 1 1)
+    if w `M.member` floats
+      then do
+            -- Sink the window
+        windows (W.sink w)
+            -- Restore border
+        withDisplay $ \d -> liftIO $ setWindowBorderWidth d w myBorderWidth
+      else do
+            -- Float full screen
+        windows $ W.float w (W.RationalRect 0 0 1 1)
+            -- Remove border
+        withDisplay $ \d -> liftIO $ setWindowBorderWidth d w 0
 
 -- Key bindings
 myKeys conf@(XConfig {XMonad.modMask = modm}) =
   M.fromList
     $ [ ((modm, xK_Return), spawn $ XMonad.terminal conf)
       , ((mod1Mask, xK_Return), spawn "alacritty")
-      , ((modm, xK_space), spawn "bemenu-run")
+      , ( (modm, xK_space)
+        , spawn
+            "bemenu-run --fn 'MesloLGS Nerd Font 20' -l 8 -i --nb '#1d1f21cc' --nf '#c5c8c6' --sb '#81a2becc' --sf '#sffffff'")
       , ((modm .|. shiftMask, xK_p), spawn "gmrun")
       , ((modm, xK_b), spawn "firefox --no-remote")
       , ((modm, xK_q), kill)
@@ -112,7 +126,9 @@ myStartupHook = do
   spawnOnce "xset s off -dpms"
   spawnOnce "autostart"
 
-main = xmonad defaults
+main = do
+  xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobarrc"
+  xmonad $ docks defaults
 
 defaults =
   def

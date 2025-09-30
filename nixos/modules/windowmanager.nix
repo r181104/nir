@@ -22,8 +22,8 @@
     feh
     picom
     dunst
-    polybar
     pywal
+    xmobar
     bemenu
     betterlockscreen
     # === Icons & themes ===
