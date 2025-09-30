@@ -6,6 +6,61 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--   group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+--   callback = function(ev)
+--     local map = function(mode, lhs, rhs, desc)
+--       vim.keymap.set(mode, lhs, rhs, { buffer = ev.buf, desc = desc })
+--     end
+--
+--     local extra_ok, extra = pcall(require, "mini.extra") -- safe require
+--     local use_extra = extra_ok and extra.pickers ~= nil
+--
+--     -- ===== LSP Navigation =====
+--     if use_extra then
+--       map("n", "gd", extra.pickers.lsp_definitions, "Go to definition")
+--       map("n", "gr", extra.pickers.lsp_references, "Find references")
+--       map("n", "gi", extra.pickers.lsp_implementations, "Go to implementation")
+--       map("n", "<leader>ws", extra.pickers.lsp_workspace_symbols, "Search workspace symbols")
+--     else
+--       map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+--       map("n", "gr", vim.lsp.buf.references, "Find references")
+--       map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+--       map("n", "<leader>ws", vim.lsp.buf.workspace_symbol, "Search workspace symbols")
+--     end
+--
+--     -- ===== Hover & Signature =====
+--     map("n", "K", vim.lsp.buf.hover, "Hover documentation")
+--     map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
+--
+--     -- ===== Workspace =====
+--     map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, "Add workspace folder")
+--     map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, "Remove workspace folder")
+--     map("n", "<leader>wl", function()
+--       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+--     end, "List workspace folders")
+--
+--     -- ===== Code Actions & Rename =====
+--     if use_extra then
+--       map("n", "<leader>ca", extra.pickers.lsp_code_actions, "Code action")
+--     else
+--       map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
+--     end
+--     map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
+--
+--     -- ===== Format =====
+--     map("n", "<leader>for", function() vim.lsp.buf.format({ async = true }) end, "Format buffer")
+--
+--     -- ===== Diagnostics =====
+--     if use_extra then
+--       map("n", "<leader>fe", extra.pickers.diagnostic, "Show diagnostics (picker)")
+--     else
+--       map("n", "<leader>fe", vim.diagnostic.open_float, "Show diagnostics in float")
+--     end
+--     map("n", "<leader>ce", vim.diagnostic.setqflist, "Send diagnostics to quickfix")
+--   end,
+-- })
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
 	callback = function(ev)
