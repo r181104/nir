@@ -5,7 +5,7 @@ super + shift + Return
 	kitty
 
 super + b
-    firefox
+    firefox --no-remote
 
 super + e
 	pcmanfm

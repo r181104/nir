@@ -58,7 +58,6 @@ return {
 
 	unix_domains = { { name = "unix" } },
 	default_gui_startup_args = { "connect", "unix" },
-
 	keys = {
 		-- NOTE: Tabs
 		{ key = "t", mods = "ALT", action = act.SpawnTab("CurrentPaneDomain") },
@@ -77,8 +76,8 @@ return {
 		{ key = "8", mods = "ALT", action = act.ActivateTab(7) },
 		{ key = "9", mods = "ALT", action = act.ActivateTab(8) },
 		-- NOTE: Panes
-		{ key = "v", mods = "ALT|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-		{ key = "s", mods = "ALT|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		{ key = "V", mods = "ALT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+		{ key = "S", mods = "ALT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 		{ key = "q", mods = "ALT", action = act.CloseCurrentPane({ confirm = true }) },
 		-- NOTE: Navigation
 		{ key = "h", mods = "CTRL", action = act.ActivatePaneDirection("Left") },
@@ -86,18 +85,18 @@ return {
 		{ key = "k", mods = "CTRL", action = act.ActivatePaneDirection("Up") },
 		{ key = "j", mods = "CTRL", action = act.ActivatePaneDirection("Down") },
 		-- NOTE: Resize (FIXED)
-		{ key = "h", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Left", 3 }) },
-		{ key = "l", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Right", 3 }) },
-		{ key = "k", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Up", 2 }) },
-		{ key = "j", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Down", 2 }) },
+		{ key = "H", mods = "CTRL", action = act.AdjustPaneSize({ "Left", 3 }) },
+		{ key = "L", mods = "CTRL", action = act.AdjustPaneSize({ "Right", 3 }) },
+		{ key = "K", mods = "CTRL", action = act.AdjustPaneSize({ "Up", 2 }) },
+		{ key = "J", mods = "CTRL", action = act.AdjustPaneSize({ "Down", 2 }) },
 		-- NOTE: Misc
 		{ key = "r", mods = "ALT", action = act.ReloadConfiguration },
-		{ key = "f", mods = "ALT", action = act.Search({ CaseInSensitiveString = "" }) },
+		{ key = "F", mods = "ALT", action = act.Search({ CaseInSensitiveString = "" }) },
 		{ key = "c", mods = "ALT", action = act.CopyTo("Clipboard") },
 		{ key = "v", mods = "ALT", action = act.PasteFrom("Clipboard") },
 		-- NOTE: Multiplexer
 		{ key = "d", mods = "ALT", action = act.DetachDomain("CurrentPaneDomain") },
 		{ key = "a", mods = "ALT", action = act.AttachDomain("unix") },
+		{ key = "Y", mods = "ALT", action = act.ActivateCopyMode },
 	},
-	copy_on_select = true,
 }

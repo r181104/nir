@@ -1,5 +1,4 @@
 local map = vim.keymap.set
-local fzf = require("fzf-lua")
 
 -- General
 map({ "n", "i", "c", "v", "x" }, "<C-c>", "<Esc>")
@@ -27,23 +26,6 @@ map("n", "<C-l>", "<cmd> TmuxNavigateRight<CR>", { desc = "Move to right split" 
 
 -- Git Blame
 map("n", "<leader>gb", ":Gitsigns blame_line<CR>", { desc = "Git blame" })
-
--- NOTE: FZF_LUA
-map("n", "<leader>ff", function()
-	fzf.files()
-end, { desc = "Find files" })
--- Live grep (search text in project)
-map("n", "<leader>fg", function()
-	fzf.live_grep()
-end, { desc = "Search text (live grep)" })
--- Buffers
-map("n", "<leader>fb", function()
-	fzf.buffers()
-end, { desc = "Find buffers" })
--- Help tags
-map("n", "<leader>fh", function()
-	fzf.help_tags()
-end, { desc = "Search help tags" })
 
 -- Colorizer toggle
 map("n", "<leader>tc", "<cmd>ColorizerToggle<CR>", { desc = "Toggle Colorizer" })
