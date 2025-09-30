@@ -14,7 +14,7 @@ map("n", "<C-c>", "<cmd>nohlsearch<CR>")
 map({ "n", "v" }, "<Leader>y", '"+y', { noremap = true, silent = true, desc = "Yank to system clipboard" })
 
 -- File explorer & LazyGit
-map("n", "<leader>e", "<CMD>Oil<CR>", { desc = "Open oil file explorer" })
+-- map("n", "<leader>e", "<CMD>Oil<CR>", { desc = "Open oil file explorer" })
 map("n", "<leader>git", ":LazyGit<CR>", { desc = "Open LazyGit" })
 map("n", "<leader>ter", ":vsplit | terminal<CR>", { desc = "Open terminal in vertical split" })
 

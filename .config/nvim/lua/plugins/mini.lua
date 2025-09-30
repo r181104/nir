@@ -40,10 +40,51 @@ return {
 			MiniJump2d.start()
 		end, { desc = "Jump2d" })
 		-- ===== Files =====
-		require("mini.files").setup({ mappings = { go_in = "", go_out = "", close = "" } })
-		vim.keymap.set("n", "<leader>e", function()
-			MiniFiles.open()
-		end, { desc = "File explorer" })
+		require("mini.files").setup({
+			mappings = {
+				go_in = "",
+				go_out = "",
+				close = "",
+				go_split = "",
+				go_vsplit = "",
+				go_tab = "",
+				create = "",
+				remove = "",
+				rename = "",
+				copy = "",
+				move = "",
+				toggle_hidden = "",
+			},
+			use_as_default_explorer = true,
+		})
+		local mf = require("mini.files")
+		mf.setup({
+			mappings = {},
+			use_as_default_explorer = true,
+		})
+		vim.keymap.set("n", "<leader>e", mf.open, { desc = "File Explorer" })
+		mf.open = (function(original_open)
+			return function(...)
+				original_open(...)
+				local buf = vim.api.nvim_get_current_buf()
+				local map = function(lhs, rhs, desc)
+					vim.keymap.set("n", lhs, rhs, { buffer = buf, desc = desc })
+				end
+				map("<CR>", mf.go_in, "Open file/folder")
+				map("h", mf.go_out, "Go up folder")
+				map("l", mf.go_in, "Enter folder")
+				map("q", mf.close, "Close explorer")
+				map("v", mf.go_vsplit, "Open in vertical split")
+				map("s", mf.go_split, "Open in horizontal split")
+				map("t", mf.go_tab, "Open in new tab")
+				map("a", mf.create, "Create file/folder")
+				map("d", mf.remove, "Delete file/folder")
+				map("r", mf.rename, "Rename file/folder")
+				map("c", mf.copy, "Copy file/folder")
+				map("m", mf.move, "Move file/folder")
+				map(".", mf.toggle_hidden, "Toggle hidden files")
+			end
+		end)(mf.open)
 		-- ===== Pick & Extra =====
 		require("mini.pick").setup()
 		require("mini.extra").setup()
@@ -69,8 +110,7 @@ return {
 				previewer = "builtin",
 			})
 		end, { desc = "Buffers" })
-		-- ===== Git, Indents, Highlight =====
-		require("mini.git").setup()
+		-- ===== Indents, Highlight =====
 		require("mini.indentscope").setup()
 		require("mini.hipatterns").setup({
 			highlighters = { hex_color = require("mini.hipatterns").gen_highlighter.hex_color() },
