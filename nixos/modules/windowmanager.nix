@@ -8,6 +8,14 @@
     autoRepeatDelay = 200;
     autoRepeatInterval = 50;
   };
+  services.xserver.windowManager.xmonad = {
+    enable = true;
+    config = builtins.readFile ./../../.config/xmonad/xmonad.hs;
+    enableContribAndExtras = true;
+    enableConfiguredRecompile = true;
+    haskellPackages = pkgs.haskellPackages;
+  };
+  boot.initrd.systemd.dbus.enable = true;
   services.xserver.windowManager.bspwm.enable = true;
   services.displayManager.defaultSession = "none+bspwm";
   environment.systemPackages = with pkgs; [

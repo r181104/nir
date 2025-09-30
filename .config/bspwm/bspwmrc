@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# === NVIDIA PRIME / hybrid graphics ===
-if xrandr --listproviders 2>/dev/null | grep -q NVIDIA; then
-  xrandr --setprovideroutputsource modesetting NVIDIA-0 || echo "Failed to set NVIDIA provider"
-fi
-
 # === Keyboard & Mouse ===
 xset r rate 200 50
 xset -b
@@ -29,9 +24,7 @@ for id in $(xinput list --id-only | xargs -n1 xinput list-props | grep -B1 "Touc
 done
 
 # === Monitor setup (auto-detect connected) ===
-for output in $(xrandr | grep " connected" | awk '{print $1}'); do
-  xrandr --output "$output" --mode 1920x1080 --rate 60.00 2>/dev/null
-done
+monitors
 
 # === Background apps (no duplicates) ===
 for app in dunst picom sxhkd nm-applet blueman-applet; do

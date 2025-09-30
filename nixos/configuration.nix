@@ -16,7 +16,6 @@
     ./modules/graphics.nix
     ./modules/gaming.nix
     ./modules/auto-upgrade.nix
-    ./modules/xmonad.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
