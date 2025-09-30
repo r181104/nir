@@ -26,6 +26,15 @@ myNormalBorderColor = "#dddddd"
 
 myFocusedBorderColor = "#ff0000"
 
+-- Toggle between floating fullscreen and tiling
+toggleFull :: X ()
+toggleFull =
+  withFocused $ \windowId -> do
+    floats <- gets (W.floating . windowset)
+    if windowId `M.member` floats
+      then windows (W.sink windowId)
+      else windows $ W.float windowId (W.RationalRect 0 0 1 1)
+
 -- Key bindings
 myKeys conf@(XConfig {XMonad.modMask = modm}) =
   M.fromList
@@ -62,6 +71,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) =
       -- Workspace cycling
       , ((modm, xK_j), prevWS)
       , ((modm, xK_k), nextWS)
+      , ((modm, xK_f), toggleFull) -- toggle between full screen and tiling
       ]
         ++ [ ((m .|. modm, k), windows $ f i)
            | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
