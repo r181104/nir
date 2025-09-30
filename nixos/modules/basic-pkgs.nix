@@ -9,7 +9,6 @@
     # === Essentials ===
     git
     vim
-    neovim
     neovide
     keychain
     xclip

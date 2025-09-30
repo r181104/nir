@@ -32,6 +32,7 @@
                 vim
               ]
               ++ [
+                unstablePkgs.neovim
                 unstablePkgs.hello
                 unstablePkgs.prettier
               ];
