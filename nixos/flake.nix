@@ -1,5 +1,5 @@
 {
-  description = "Hybrid NixOS flake with stable, some unstable packages, and home-manager";
+  description = "Hybrid NixOS flake with stable and some unstable packages";
 
   inputs = {
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
