@@ -11,6 +11,7 @@ const addLinkButton = document.getElementById("add-link-button");
 
 let links = [
   { name: "Youtube", url: "https://www.youtube.com" },
+  { name: "IIT", url: "https://ds.study.iitm.ac.in" },
   { name: "Perplexity", url: "https://www.perplexity.ai" },
   { name: "ChatGpt", url: "https://www.chatgpt.com" },
   { name: "Chess", url: "https://www.chess.com" },
