@@ -22,6 +22,7 @@
     # === Language Server Protocols ===
     pyright
     lua-language-server
+    haskellPackages.ghcide
     jdt-language-server
     vtsls
     tailwindcss-language-server
@@ -30,6 +31,7 @@
     stylua
     black
     isort
+    haskellPackages.hindent
     gofumpt
     goimports-reviser
     shfmt

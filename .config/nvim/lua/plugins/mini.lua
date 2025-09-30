@@ -110,6 +110,13 @@ return {
 				previewer = "builtin",
 			})
 		end, { desc = "Buffers" })
+		vim.keymap.set("n", "<leader>fp", function()
+			pick.builtin.help({
+				prompt = "Help> ",
+				previewer = "builtin",
+			})
+		end, { desc = "Help tags" })
+
 		-- ===== Indents, Highlight =====
 		require("mini.indentscope").setup()
 		require("mini.hipatterns").setup({

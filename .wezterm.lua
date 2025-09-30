@@ -51,7 +51,7 @@ return {
 	use_fancy_tab_bar = false,
 	show_new_tab_button_in_tab_bar = false,
 	status_update_interval = 1000,
-	window_decorations = "RESIZE",
+	window_decorations = "NONE",
 	enable_scroll_bar = false,
 	disable_default_key_bindings = true,
 

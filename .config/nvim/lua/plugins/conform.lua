@@ -8,6 +8,7 @@ return {
 				-- Core langs
 				lua = { "stylua" },
 				python = { "isort", "black" },
+				haskell = { "hindent" },
 				javascript = { "prettierd", "prettier" },
 				javascriptreact = { "prettierd", "prettier" },
 				typescript = { "prettierd", "prettier" },
@@ -29,7 +30,7 @@ return {
 				cpp = { "clang-format" },
 				java = { "google-java-format" },
 				sql = { "sqlfluff", "pg_format" },
-				hyprlang = { "shfmt" }, -- best effort, optional
+				hyprlang = { "shfmt" },
 			},
 			formatters = {
 				fish_indent = {
@@ -39,7 +40,7 @@ return {
 				},
 				shfmt = {
 					command = "shfmt",
-					args = { "-i", "2", "-ci" }, -- 2-space indent, indent case labels
+					args = { "-i", "2", "-ci" },
 					stdin = true,
 				},
 			},
