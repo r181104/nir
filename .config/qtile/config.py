@@ -136,7 +136,7 @@ layouts = [
 
 # --- WIDGET DEFAULTS (LARGER FONT & SPACING) ---
 widget_defaults = {
-    "font": "JetBrainsMono NF Bold",
+    "font": "MesloLGS Nerd Font Bold",
     "fontsize": 15,  # Increased font size
     "padding": 10,  # Increased padding
     "foreground": colors[7],
@@ -207,7 +207,7 @@ def create_bar_widgets():
             low_foreground=colors[1],
             foreground=colors[9],
             padding=10,
-            font="JetBrainsMono Nerd Font",
+            font="MesloLGS Nerd Font",
             fontsize=16,
             show_short_text=False,
             update_interval=10,
