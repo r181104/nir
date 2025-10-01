@@ -2,7 +2,8 @@
 
 CACHE_FILE="$HOME/.cache/betterlockscreen_last"
 
-CURRENT_WALL=$(grep -oP "(?<=feh --no-fehbg --bg-scale ')[^']+" "$HOME/.fehbg")
+# Extract wallpaper path (last argument in ~/.fehbg)
+CURRENT_WALL=$(sed -n "s/.*'\(.*\)'.*/\1/p" "$HOME/.fehbg" | tail -n1)
 
 [ -z "$CURRENT_WALL" ] && echo "No wallpaper found in ~/.fehbg" && exit 1
 

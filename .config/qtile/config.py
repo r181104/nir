@@ -36,7 +36,7 @@ keys = [
     # Window management
     Key([mod, "control"], "w", lazy.window.toggle_maximize()),
     Key([mod], "h", lazy.window.toggle_minimize()),
-    Key([mmod, "control"], "l", lazy.spawn("betterlockscreen -l")),
+    Key([mmod, "control"], "l", lazy.spawn("lock")),
     # Media controls
     Key(
         [],
