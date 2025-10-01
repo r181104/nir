@@ -10,11 +10,11 @@ from libqtile.utils import guess_terminal
 mod = "mod4"  # Super key
 mmod = "mod1"  # Alt key
 mmodd = "control"
-terminal = "alacritty"
+terminal = "wezterm"
 term = guess_terminal()
 filemanager = "thunar"
-theme = os.path.expanduser("~/snix/scripts/wset-qtile")
-browser = "brave --gtk-version=3 --disable-extensions --disable-background-networking --disable-sync --disable-component-update --disable-default-apps --disable-translate --disable-notifications --no-first-run --enable-features=FastTabUnloading "
+theme = "wset"
+browser = "firefox --no-remote"
 
 # --- LOAD PYWAL COLORS ---
 colors = []
@@ -35,7 +35,7 @@ keys = [
     Key([mod], "k", lazy.screen.next_group()),
     # Window management
     Key([mod, "control"], "w", lazy.window.toggle_maximize()),
-    Key([mod, "control"], "s", lazy.window.toggle_minimize()),
+    Key([mod], "h", lazy.window.toggle_minimize()),
     Key([mmod, "control"], "l", lazy.spawn("betterlockscreen -l")),
     # Media controls
     Key(

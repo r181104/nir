@@ -11,7 +11,7 @@
   services.xserver.windowManager.qtile = {
     enable = true;
     package = pkgs.python3.pkgs.qtile;
-    # configFile = ./;
+    configFile = ./../../.config/qtile/config.py;
     extraPackages = python3Packages:
       with python3Packages; [
         qtile-extras
