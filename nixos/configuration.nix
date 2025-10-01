@@ -39,19 +39,6 @@
   };
   hardware.bluetooth.enable = true;
 
-  users.defaultUserShell = pkgs.bash;
-  users.users.sten = {
-    isNormalUser = true;
-    shell = pkgs.fish;
-    description = "sten";
-    extraGroups = ["networkmanager" "wheel" "input"];
-    packages = with pkgs; [
-      fish
-      zsh
-      tree
-    ];
-  };
-
   console = {
     font = "solar24x32";
     useXkbConfig = true;
