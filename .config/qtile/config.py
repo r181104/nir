@@ -82,7 +82,7 @@ keys = [
     Key([mod], "q", lazy.window.kill()),
     Key([mod], "f", lazy.window.toggle_fullscreen()),
     Key([mod], "t", lazy.window.toggle_floating()),
-    Key([mod], "r", lazy.reload_config()),
+    Key([mod], "r", lazy.reload_config(), lazy.spawn("notify-send 'Config Reloaded'")),
     Key([mmod, "control"], "q", lazy.shutdown()),
     Key([mod], "space", lazy.spawncmd()),
 ]

@@ -7,7 +7,7 @@ fi
 
 IMAGE="$1"
 
-dunstify "Changing Theme" "Applying new wallpaper and updating colors, please wait until confirmation..."
+notify-send "Changing Theme" "Applying new wallpaper and updating colors, please wait until confirmation..."
 
 feh --bg-fill "$IMAGE"
 
@@ -18,4 +18,4 @@ wal -i "$IMAGE" -n -s -t -e
 qtile cmd-obj -o cmd -f reload_config
 bash $HOME/snix/scripts/ref-dunst
 
-dunstify "Theme Applied" "Wallpaper and Theme updated successfully"
+notify-send "Theme Applied" "Wallpaper and Theme updated successfully"
