@@ -7,7 +7,6 @@
   imports = [
     /etc/nixos/hardware-configuration.nix
     ./modules/basic-pkgs.nix
-    ./modules/services.nix
     ./modules/security.nix
     ./modules/audio.nix
     ./modules/video.nix
@@ -62,6 +61,19 @@
 
   nixpkgs.config.allowUnfree = true;
   hardware.enableRedistributableFirmware = true;
+
+  # services.xserver.desktopManager.budgie.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  services.printing.enable = true;
+  services.openssh.enable = true;
+  services.libinput.enable = true;
+  services.udisks2.enable = true;
+  services.udev.extraRules = ''
+    # Example: Mount USB drives to /media/<label> automatically
+        ACTION=="add", SUBSYSTEM=="block", ENV{ID_FS_USAGE}=="filesystem", RUN+="${pkgs.systemd}/bin/systemd-mount --no-block --automount=yes --collect $devnode /media/%E{ID_FS_LABEL}"
+    # Allow input group to access input devices
+        KERNEL=="event*", NAME="input/%k", MODE="660", GROUP="input"
+  '';
 
   time.timeZone = "Asia/Kolkata";
   i18n.defaultLocale = "en_IN";

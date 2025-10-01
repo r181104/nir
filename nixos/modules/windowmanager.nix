@@ -8,6 +8,11 @@
     autoRepeatDelay = 200;
     autoRepeatInterval = 50;
   };
+  services.displayManager.ly.enable = true;
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
   services.xserver.windowManager.qtile = {
     enable = true;
     package = pkgs.python3.pkgs.qtile;
