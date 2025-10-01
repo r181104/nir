@@ -12,5 +12,5 @@ sed -i "
 " ~/.config/dunst/dunstrc
 
 # Kill and restart Dunst
-killall .dunst_wrapped
+pkill -f "dunst"
 dunst &

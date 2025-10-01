@@ -23,14 +23,16 @@
       ];
   };
   services.displayManager.defaultSession = "none+Qtile";
+  programs.i3lock.enable = true;
+  security.pam.services.i3lock = {};
   environment.systemPackages = with pkgs; [
     # === Compositing, notifications, and status bar ===
     feh
     picom
     dunst
+    libnotify
     pywal
     bemenu
-    betterlockscreen
     # === Icons & themes ===
     papirus-icon-theme
     # === Input & gestures ===

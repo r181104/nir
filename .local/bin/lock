@@ -1,22 +1,24 @@
 #!/bin/sh
 
-CACHE_FILE="$HOME/.cache/betterlockscreen_last"
+CACHE_FILE="$HOME/.cache/lockscreen_last"
+TMP_LOCK="/tmp/lockscreen.png"
 
-# Extract wallpaper path (last argument in ~/.fehbg)
+# Extract wallpaper path from ~/.fehbg
 CURRENT_WALL=$(sed -n "s/.*'\(.*\)'.*/\1/p" "$HOME/.fehbg" | tail -n1)
-
 [ -z "$CURRENT_WALL" ] && echo "No wallpaper found in ~/.fehbg" && exit 1
 
+# Read last cached wallpaper
 if [ -f "$CACHE_FILE" ]; then
   LAST_WALL=$(cat "$CACHE_FILE")
 else
   LAST_WALL=""
 fi
 
-if [ "$CURRENT_WALL" = "$LAST_WALL" ]; then
-  betterlockscreen -l blur
-else
-  betterlockscreen -u "$CURRENT_WALL" --blur 0.7
+# Generate blurred wallpaper if changed or doesn't exist
+if [ "$CURRENT_WALL" != "$LAST_WALL" ] || [ ! -f "$TMP_LOCK" ]; then
+  convert "$CURRENT_WALL" -blur 0x7 "$TMP_LOCK"
   echo "$CURRENT_WALL" >"$CACHE_FILE"
-  betterlockscreen -l blur
 fi
+
+# Lock screen with vanilla i3lock using the blurred image
+i3lock -i "$TMP_LOCK"
