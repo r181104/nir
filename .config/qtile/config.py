@@ -166,13 +166,13 @@ def create_bar_widgets():
         widget.Prompt(padding=12),
         # Middle section
         widget.Spacer(),
-        widget.WindowName(max_chars=60, foreground=colors[6], padding=12),
+        widget.WindowName(max_chars=100, foreground=colors[6], padding=12),
         widget.Spacer(),
         # Right side with generous spacing
         widget.Systray(icon_size=20, padding=12),
         widget.Spacer(length=12),
         widget.CheckUpdates(
-            distro="Arch_checkupdates",
+            distro="NixOS",
             display_format=" {updates}",
             no_update_string=" 0",
             update_interval=1800,
