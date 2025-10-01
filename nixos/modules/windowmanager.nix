@@ -22,14 +22,13 @@
         qtile-extras
       ];
   };
-  services.displayManager.defaultSession = "none+xmonad";
+  services.displayManager.defaultSession = "none+Qtile";
   environment.systemPackages = with pkgs; [
     # === Compositing, notifications, and status bar ===
     feh
     picom
     dunst
     pywal
-    xmobar
     bemenu
     betterlockscreen
     # === Icons & themes ===
