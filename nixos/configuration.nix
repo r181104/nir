@@ -8,6 +8,7 @@
     /etc/nixos/hardware-configuration.nix
     ./modules/basic-pkgs.nix
     ./modules/security.nix
+    ./modules/git.nix
     ./modules/audio.nix
     ./modules/video.nix
     ./modules/dev.nix
@@ -38,6 +39,21 @@
     };
   };
   hardware.bluetooth.enable = true;
+
+  users.defaultUserShell = pkgs.bash;
+  users.users.sten = {
+    isNormalUser = true;
+    shell = pkgs.fish;
+    description = "sten";
+    extraGroups = ["networkmanager" "wheel" "input"];
+    packages = with pkgs; [
+      fish
+      zsh
+      tree
+      git
+      delta
+    ];
+  };
 
   console = {
     font = "solar24x32";
