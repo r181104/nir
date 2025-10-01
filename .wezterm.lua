@@ -23,7 +23,6 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	local index = tab.tab_index + 1
 	local title = tab.active_pane.title
 
-	-- NOTE: active tab highlight
 	if tab.is_active then
 		return {
 			{
@@ -43,10 +42,63 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	end
 end)
 
+-- NOTE: Load pywal colors
+local function get_pywal_colors()
+	local file = io.open(os.getenv("HOME") .. "/.cache/wal/colors.json")
+	if not file then
+		return {}
+	end
+	local data = file:read("*a")
+	file:close()
+	local ok, json = pcall(wezterm.json_parse, data)
+	if not ok then
+		return {}
+	end
+	return json
+end
+
+local pywal = get_pywal_colors()
+
+local scheme = {
+	foreground = pywal.special and pywal.special.foreground or "#c0c0c0",
+	background = pywal.special and pywal.special.background or "#000000",
+	cursor_bg = pywal.special and pywal.special.cursor or "#ffffff",
+	cursor_fg = pywal.special and pywal.special.background or "#000000",
+	cursor_border = pywal.special and pywal.special.cursor or "#ffffff",
+
+	ansi = {
+		pywal.colors and pywal.colors.color0 or "#000000",
+		pywal.colors and pywal.colors.color1 or "#ff0000",
+		pywal.colors and pywal.colors.color2 or "#00ff00",
+		pywal.colors and pywal.colors.color3 or "#ffff00",
+		pywal.colors and pywal.colors.color4 or "#0000ff",
+		pywal.colors and pywal.colors.color5 or "#ff00ff",
+		pywal.colors and pywal.colors.color6 or "#00ffff",
+		pywal.colors and pywal.colors.color7 or "#c0c0c0",
+	},
+
+	brights = {
+		pywal.colors and pywal.colors.color8 or "#808080",
+		pywal.colors and pywal.colors.color9 or "#ff0000",
+		pywal.colors and pywal.colors.color10 or "#00ff00",
+		pywal.colors and pywal.colors.color11 or "#ffff00",
+		pywal.colors and pywal.colors.color12 or "#0000ff",
+		pywal.colors and pywal.colors.color13 or "#ff00ff",
+		pywal.colors and pywal.colors.color14 or "#00ffff",
+		pywal.colors and pywal.colors.color15 or "#ffffff",
+	},
+}
+
+-- NOTE: Watch pywal JSON for changes
+wezterm.add_to_config_reload_watch_list(os.getenv("HOME") .. "/.cache/wal/colors.json")
+
+wezterm.on("window-config-reloaded", function(window, pane)
+	window:toast_notification("WezTerm", "Pywal colors reloaded", nil, 3000)
+end)
+
 return {
 	font = wezterm.font_with_fallback({ "MesloLGS Nerd Font", "FiraCode Nerd Font" }),
 	font_size = 24,
-	color_scheme = "Rosé Pine (Gogh)",
 	hide_tab_bar_if_only_one_tab = false,
 	use_fancy_tab_bar = false,
 	show_new_tab_button_in_tab_bar = false,
@@ -98,4 +150,8 @@ return {
 		{ key = "a", mods = "ALT", action = act.AttachDomain("unix") },
 		{ key = "Y", mods = "ALT", action = act.ActivateCopyMode },
 	},
+
+	-- NOTE: Pywal colors injected
+	colors = scheme,
+	window_background_opacity = tonumber(pywal.alpha) / 100 or 1.0,
 }
