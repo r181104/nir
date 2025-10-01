@@ -8,14 +8,15 @@
     autoRepeatDelay = 200;
     autoRepeatInterval = 50;
   };
-  services.xserver.windowManager.xmonad = {
+  services.xserver.windowManager.qtile = {
     enable = true;
-    config = builtins.readFile ./../../.config/xmonad/xmonad.hs;
-    enableContribAndExtras = true;
-    enableConfiguredRecompile = true;
-    haskellPackages = pkgs.haskellPackages;
+    package = pkgs.python3.pkgs.qtile;
+    # configFile = ./;
+    extraPackages = python3Packages:
+      with python3Packages; [
+        qtile-extras
+      ];
   };
-  boot.initrd.systemd.dbus.enable = true;
   services.displayManager.defaultSession = "none+xmonad";
   environment.systemPackages = with pkgs; [
     # === Compositing, notifications, and status bar ===

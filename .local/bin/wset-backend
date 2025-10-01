@@ -13,10 +13,9 @@ feh --bg-fill "$IMAGE"
 
 wal -i "$IMAGE" -n -s -t -e
 
-~/nir/.local/bin/launch-poly
 ~/nir/.local/bin/ref-dunst
 
-bspc wm -r
-bspc wm --restart
+qtile cmd-obj -o cmd -f reload_config
+bash $HOME/snix/scripts/ref-dunst
 
 dunstify "Theme Applied" "Wallpaper and Theme updated successfully"
