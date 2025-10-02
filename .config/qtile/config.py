@@ -264,9 +264,3 @@ floating_layout = layout.Floating(
 @hook.subscribe.startup_once
 def autostart():
     subprocess.Popen([os.path.expanduser("~/nir/.local/bin/autostart")])
-
-
-# --- IMPORT SCRATCHPAD OVERLAY ---
-from scratchpad import overlay_scratchpad_setup
-
-overlay_scratchpad_setup(groups, qtile, colors)
