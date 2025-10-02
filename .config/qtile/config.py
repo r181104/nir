@@ -130,8 +130,8 @@ layout_common = {
 }
 
 layouts = [
-    layout.Tile(**layout_common),
     layout.Columns(**layout_common),
+    layout.Tile(**layout_common),
 ]
 
 # --- WIDGET DEFAULTS (LARGER FONT & SPACING) ---
@@ -223,10 +223,10 @@ screens = [
     Screen(
         bottom=bar.Bar(
             create_bar_widgets(),
-            36,  # Increased bar height to accommodate larger text and spacing
-            margin=[8, 12, 4, 12],  # Increased side margins
+            36,
+            margin=[8, 12, 4, 12],
             background=colors[0],
-            opacity=0.95,
+            opacity=0.8,
         ),
     ),
 ]

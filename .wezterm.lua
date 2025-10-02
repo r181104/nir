@@ -26,7 +26,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	if tab.is_active then
 		return {
 			{
-				Background = { Color = "#5E81AC" },
+				Background = { Color = "#000000" },
 				Foreground = { Color = "#ECEFF4" },
 				Text = " " .. index .. ":" .. title .. " ",
 			},
@@ -34,7 +34,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	else
 		return {
 			{
-				Background = { Color = "#3B4252" },
+				Background = { Color = "#000000" },
 				Foreground = { Color = "#D8DEE9" },
 				Text = " " .. index .. ":" .. title .. " ",
 			},
