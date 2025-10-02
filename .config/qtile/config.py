@@ -24,38 +24,21 @@ with open(cache, "r") as file:
     for _ in range(16):
         colors.append(file.readline().strip())
 
-# --- GPU STATUS WIDGET ---
+# --- LIGHTWEIGHT GPU STATUS WIDGET ---
 class GPUStatus(widget.base.InLoopPollText):
     """
     Show which GPU is active: Intel, NVIDIA, or both.
-    Checks kernel modules and NVIDIA usage via nvidia-smi.
+    Lightweight: only checks loaded kernel modules.
     """
-    def __init__(self, update_interval=5, **config):
-        super().__init__(**config)
-        self.update_interval = update_interval
-
     def poll(self):
         intel_loaded = os.path.exists("/sys/module/i915")
-        nvidia_loaded = os.path.exists("/proc/driver/nvidia") or os.path.exists("/sys/module/nvidia")
-        nvidia_active = False
-
-        # check if any process is using NVIDIA GPU
-        try:
-            output = subprocess.check_output(
-                ["nvidia-smi", "--query-compute-apps=pid", "--format=csv,noheader"],
-                text=True
-            )
-            if output.strip():
-                nvidia_active = True
-        except Exception:
-            pass
-
-        if intel_loaded and nvidia_active:
-            return "GPU: Intel + NVIDIA active"
-        elif nvidia_active:
-            return "GPU: NVIDIA active"
+        nvidia_loaded = os.path.exists("/sys/module/nvidia")
+        if intel_loaded and nvidia_loaded:
+            return "GPU: Intel + NVIDIA"
+        elif nvidia_loaded:
+            return "GPU: NVIDIA"
         elif intel_loaded:
-            return "GPU: Intel active"
+            return "GPU: Intel"
         else:
             return "GPU: unknown"
 
@@ -127,16 +110,9 @@ for vt in range(1, 8):
 
 # --- GROUPS WITH NERD FONT ICONS ---
 groups = [
-    Group("1", label=""),  # Terminal
-    Group("2", label=""),  # Browser
-    Group("3", label=""),  # Code
-    Group("4", label=""),  # Tools
-    Group("5", label=""),  # Files
-    Group("6", label=""),  # Media
-    Group("7", label=""),  # Chat
-    Group("8", label=""),  # Containers
-    Group("9", label=""),  # Docs
-    Group("0", label=""),  # Settings
+    Group("1", label=""), Group("2", label=""), Group("3", label=""), Group("4", label=""),
+    Group("5", label=""), Group("6", label=""), Group("7", label=""), Group("8", label=""),
+    Group("9", label=""), Group("0", label="")
 ]
 
 # Group keybindings
@@ -154,10 +130,7 @@ layout_common = {
     "margin": 0,
 }
 
-layouts = [
-    layout.Columns(**layout_common),
-    layout.Tile(**layout_common),
-]
+layouts = [layout.Columns(**layout_common), layout.Tile(**layout_common)]
 
 # --- WIDGET DEFAULTS ---
 widget_defaults = {
@@ -169,89 +142,33 @@ widget_defaults = {
 }
 extension_defaults = widget_defaults.copy()
 
-# --- BAR CONFIGURATION ---
+# --- LIGHTWEIGHT BAR CONFIGURATION ---
 def create_bar_widgets():
     return [
         widget.CurrentLayoutIcon(scale=0.7, foreground=colors[3], padding=12),
-        widget.Spacer(length=12),
-        widget.GroupBox(
-            highlight_method="block",
-            block_highlight_text_color=colors[7],
-            inactive=colors[8],
-            active=colors[7],
-            this_current_screen_border=colors[5],
-            urgent_text=colors[1],
-            rounded=True,
-            padding=12,
-            margin_x=6,
-        ),
-        widget.Spacer(length=12),
-        widget.Prompt(padding=12),
-        widget.Spacer(),
+        widget.GroupBox(highlight_method="block", block_highlight_text_color=colors[7],
+                        inactive=colors[8], active=colors[7], this_current_screen_border=colors[5],
+                        urgent_text=colors[1], rounded=True, padding=12, margin_x=6),
         widget.WindowName(max_chars=100, foreground=colors[6], padding=12),
-        widget.Spacer(),
         widget.Systray(icon_size=20, padding=12),
-        widget.Spacer(length=12),
-        widget.CheckUpdates(
-            distro="NixOS",
-            display_format=" {updates}",
-            no_update_string=" 0",
-            update_interval=1800,
-            foreground=colors[2],
-            padding=10,
-        ),
-        widget.Spacer(length=12),
-        widget.CPU(format=" {load_percent}%", foreground=colors[3], padding=10),
-        widget.Spacer(length=12),
-        widget.Memory(format=" {MemPercent}%", foreground=colors[5], padding=10),
-        widget.Spacer(length=12),
-        widget.Net(
-            format=" {down:.2f} MB/s  ↑ {up:.2f} MB/s",
-            foreground=colors[4],
-            use_bits=False,
-            prefix="M",
-            padding=10,
-            parse=lambda x: 0.00 if x < 0.05 else round(x, 2),
-        ),
-        widget.Spacer(length=12),
-        GPUStatus(foreground=colors[7], padding=12),  # <- Fixed GPU widget
-        widget.Spacer(length=12),
+        widget.CheckUpdates(distro="NixOS", display_format=" {updates}",
+                            no_update_string=" 0", update_interval=1800, foreground=colors[2], padding=10),
+        widget.CPU(format=" {load_percent}%", foreground=colors[3], padding=10, update_interval=1.0),
+        widget.Memory(format=" {MemPercent}%", foreground=colors[5], padding=10, update_interval=2.0),
+        widget.Net(format=" {down:.2f} MB/s ↑ {up:.2f} MB/s", foreground=colors[4],
+                   use_bits=False, prefix="M", update_interval=2.0),
+        GPUStatus(foreground=colors[7], padding=12),
         widget.Clock(format=" %H:%M", foreground=colors[6], padding=10),
-        widget.Spacer(length=12),
         widget.Clock(format=" %a %d", foreground=colors[2], padding=10),
-        widget.Spacer(length=12),
-        widget.Battery(
-            battery="BAT0",
-            format="{char} {percent:2.0%}",
-            full_char="",
-            charge_char="",
-            discharge_char="",
-            empty_char="",
-            low_percentage=0.15,
-            low_foreground=colors[1],
-            foreground=colors[9],
-            padding=10,
-            font="MesloLGS Nerd Font",
-            fontsize=16,
-            show_short_text=False,
-            update_interval=10,
-        ),
-        widget.Spacer(length=12),
+        widget.Battery(battery="BAT0", format="{char} {percent:2.0%}",
+                       full_char="", charge_char="", discharge_char="", empty_char="",
+                       low_percentage=0.15, low_foreground=colors[1], foreground=colors[9],
+                       padding=10, font="MesloLGS Nerd Font", fontsize=16, show_short_text=False,
+                       update_interval=10),
         widget.QuickExit(default_text="", foreground=colors[1], padding=12),
-        widget.Spacer(length=12),
     ]
 
-screens = [
-    Screen(
-        bottom=bar.Bar(
-            create_bar_widgets(),
-            36,
-            margin=[8, 12, 4, 12],
-            background=colors[0],
-            opacity=0.8,
-        ),
-    ),
-]
+screens = [Screen(bottom=bar.Bar(create_bar_widgets(), 36, margin=[8, 12, 4, 12], background=colors[0], opacity=0.8))]
 
 # --- MOUSE CONFIGURATION ---
 mouse = [
@@ -262,7 +179,7 @@ mouse = [
 
 # --- OTHER SETTINGS ---
 dgroups_key_binder = None
-dgroups_app_rules: list[FunctionType] = []  # type-annotated for mypy
+dgroups_app_rules: list[FunctionType] = []
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
@@ -275,12 +192,9 @@ auto_minimize = True
 floating_layout = layout.Floating(
     float_rules=[
         *layout.Floating.default_float_rules,
-        Match(wm_class="confirmreset"),
-        Match(wm_class="makebranch"),
-        Match(wm_class="maketag"),
-        Match(wm_class="ssh-askpass"),
-        Match(title="branchdialog"),
-        Match(title="pinentry"),
+        Match(wm_class="confirmreset"), Match(wm_class="makebranch"),
+        Match(wm_class="maketag"), Match(wm_class="ssh-askpass"),
+        Match(title="branchdialog"), Match(title="pinentry"),
     ]
 )
 
