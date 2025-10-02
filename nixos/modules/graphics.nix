@@ -22,6 +22,7 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       mesa
+      mesa-demos
       vulkan-loader
       vulkan-tools
       vulkan-validation-layers
@@ -30,7 +31,6 @@
       intel-media-driver
       libva
       libva-utils
-      glxinfo
     ];
   };
 
