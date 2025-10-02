@@ -1,5 +1,6 @@
 import os
 import subprocess
+from types import FunctionType
 
 from libqtile import bar, hook, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -9,7 +10,7 @@ from libqtile.utils import guess_terminal
 # --- MODIFIERS AND TERMINAL ---
 mod = "mod4"  # Super key
 mmod = "mod1"  # Alt key
-mmodd = "control"
+mmodd = "control"  # Ctrl key alias
 terminal = "nvidia-run wezterm"
 term = guess_terminal()
 filemanager = "thunar"
@@ -20,55 +21,81 @@ browser = "nvidia-run firefox --no-remote"
 colors = []
 cache = os.path.expanduser("~/.cache/wal/colors")
 with open(cache, "r") as file:
-    for i in range(16):
+    for _ in range(16):
         colors.append(file.readline().strip())
+
+# --- GPU STATUS WIDGET ---
+class GPUStatus(widget.base.InLoopPollText):
+    """
+    Show which GPU is active: Intel, NVIDIA, or both.
+    Checks kernel modules and NVIDIA usage via nvidia-smi.
+    """
+    def __init__(self, update_interval=5, **config):
+        super().__init__(**config)
+        self.update_interval = update_interval
+
+    def poll(self):
+        intel_loaded = os.path.exists("/sys/module/i915")
+        nvidia_loaded = os.path.exists("/proc/driver/nvidia") or os.path.exists("/sys/module/nvidia")
+        nvidia_active = False
+
+        # check if any process is using NVIDIA GPU
+        try:
+            output = subprocess.check_output(
+                ["nvidia-smi", "--query-compute-apps=pid", "--format=csv,noheader"],
+                text=True
+            )
+            if output.strip():
+                nvidia_active = True
+        except Exception:
+            pass
+
+        if intel_loaded and nvidia_active:
+            return "GPU: Intel + NVIDIA active"
+        elif nvidia_active:
+            return "GPU: NVIDIA active"
+        elif intel_loaded:
+            return "GPU: Intel active"
+        else:
+            return "GPU: unknown"
 
 # --- KEYBINDINGS ---
 keys = [
-    # Custom keybinds
+    # Launch applications
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "b", lazy.spawn(browser), desc="Launch browser"),
     Key([mmodd], "space", lazy.spawn(theme), desc="Launch theme changer"),
     Key([mod], "e", lazy.spawn(filemanager), desc="Launch file manager"),
-    # Workspace navigation
+
+    # Layout navigation
     Key([mod], "j", lazy.screen.prev_group()),
     Key([mod], "k", lazy.screen.next_group()),
+
     # Window management
     Key([mod, "control"], "w", lazy.window.toggle_maximize()),
     Key([mod], "h", lazy.window.toggle_minimize()),
     Key([mmod, "control"], "l", lazy.spawn("lock")),
+
     # Media controls
-    Key(
-        [],
-        "XF86AudioRaiseVolume",
-        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"),
-    ),
-    Key(
-        [],
-        "XF86AudioLowerVolume",
-        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
-    ),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%")),
+    Key([], "XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%")),
     Key([], "XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")),
     Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause")),
     Key([], "XF86AudioNext", lazy.spawn("playerctl next")),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous")),
+
     # System controls
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +10%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
     Key([], "XF86AudioMedia", lazy.spawn("pavucontrol")),
-    # Any terminal that is installed
-    Key([mod, "shift"], "Return", lazy.spawn(term), desc="Launch terminal"),
-    # Layout navigation
-    Key([mmod], "h", lazy.layout.left()),
-    Key([mmod], "j", lazy.layout.down()),
-    Key([mmod], "k", lazy.layout.up()),
-    Key([mmod], "l", lazy.layout.right()),
+
+    # Layout navigation and window movement
     Key([mod, "shift"], "space", lazy.layout.next()),
-    # Window movement
     Key([mod, "shift"], "h", lazy.layout.shuffle_left()),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down()),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right()),
+
     # Window resizing
     Key([mod, "control"], "h", lazy.layout.grow_left()),
     Key([mod, "control"], "j", lazy.layout.grow_down()),
@@ -76,8 +103,8 @@ keys = [
     Key([mod, "control"], "l", lazy.layout.grow_right()),
     Key([mod], "n", lazy.layout.normalize()),
     Key([mod, "control"], "Return", lazy.layout.toggle_split()),
+
     # System commands
-    Key([mod, "shift"], "Return", lazy.spawn(guess_terminal())),
     Key([mod], "Tab", lazy.next_layout()),
     Key([mod], "q", lazy.window.kill()),
     Key([mod], "f", lazy.window.toggle_fullscreen()),
@@ -87,13 +114,13 @@ keys = [
     Key([mod], "space", lazy.spawncmd()),
 ]
 
-# VT switching
+# VT switching for Wayland fallback
 for vt in range(1, 8):
     keys.append(
         Key(
             ["control", "mod1"],
             f"f{vt}",
-            lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
+            lazy.core.change_vt(vt).when(func=lambda: getattr(qtile.core, "name", "") == "wayland"),
             desc=f"Switch to VT{vt}",
         )
     )
@@ -114,12 +141,10 @@ groups = [
 
 # Group keybindings
 for i in groups:
-    keys.extend(
-        [
-            Key([mod], i.name, lazy.group[i.name].toscreen()),
-            Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True)),
-        ]
-    )
+    keys.extend([
+        Key([mod], i.name, lazy.group[i.name].toscreen()),
+        Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True)),
+    ])
 
 # --- LAYOUTS WITH PYWAL COLORS ---
 layout_common = {
@@ -134,23 +159,21 @@ layouts = [
     layout.Tile(**layout_common),
 ]
 
-# --- WIDGET DEFAULTS (LARGER FONT & SPACING) ---
+# --- WIDGET DEFAULTS ---
 widget_defaults = {
     "font": "MesloLGS Nerd Font Bold",
-    "fontsize": 15,  # Increased font size
-    "padding": 10,  # Increased padding
+    "fontsize": 15,
+    "padding": 10,
     "foreground": colors[7],
     "background": colors[0],
 }
 extension_defaults = widget_defaults.copy()
 
-
-# --- BAR CONFIGURATION (MORE SPACING) ---
+# --- BAR CONFIGURATION ---
 def create_bar_widgets():
     return [
-        # Left side with increased spacing
         widget.CurrentLayoutIcon(scale=0.7, foreground=colors[3], padding=12),
-        widget.Spacer(length=12),  # Increased spacer
+        widget.Spacer(length=12),
         widget.GroupBox(
             highlight_method="block",
             block_highlight_text_color=colors[7],
@@ -159,16 +182,14 @@ def create_bar_widgets():
             this_current_screen_border=colors[5],
             urgent_text=colors[1],
             rounded=True,
-            padding=12,  # Increased padding
-            margin_x=6,  # Increased margin
+            padding=12,
+            margin_x=6,
         ),
         widget.Spacer(length=12),
         widget.Prompt(padding=12),
-        # Middle section
         widget.Spacer(),
         widget.WindowName(max_chars=100, foreground=colors[6], padding=12),
         widget.Spacer(),
-        # Right side with generous spacing
         widget.Systray(icon_size=20, padding=12),
         widget.Spacer(length=12),
         widget.CheckUpdates(
@@ -192,6 +213,8 @@ def create_bar_widgets():
             padding=10,
             parse=lambda x: 0.00 if x < 0.05 else round(x, 2),
         ),
+        widget.Spacer(length=12),
+        GPUStatus(foreground=colors[7], padding=12),  # <- Fixed GPU widget
         widget.Spacer(length=12),
         widget.Clock(format=" %H:%M", foreground=colors[6], padding=10),
         widget.Spacer(length=12),
@@ -218,7 +241,6 @@ def create_bar_widgets():
         widget.Spacer(length=12),
     ]
 
-
 screens = [
     Screen(
         bottom=bar.Bar(
@@ -233,21 +255,14 @@ screens = [
 
 # --- MOUSE CONFIGURATION ---
 mouse = [
-    Drag(
-        [mod],
-        "Button1",
-        lazy.window.set_position_floating(),
-        start=lazy.window.get_position(),
-    ),
-    Drag(
-        [mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()
-    ),
+    Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
+    Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
     Click([mod], "Button2", lazy.window.bring_to_front()),
 ]
 
 # --- OTHER SETTINGS ---
 dgroups_key_binder = None
-dgroups_app_rules = []
+dgroups_app_rules: list[FunctionType] = []  # type-annotated for mypy
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
@@ -268,7 +283,6 @@ floating_layout = layout.Floating(
         Match(title="pinentry"),
     ]
 )
-
 
 # --- AUTOSTART HOOK ---
 @hook.subscribe.startup_once

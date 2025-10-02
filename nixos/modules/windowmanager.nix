@@ -40,5 +40,15 @@
     xdotool
     # === GUI tools ===
     lxappearance
+    # === Python Packages for QTILE ===
+    python3Packages.psutil
+    python3Packages.pywal
+    python3Packages.pillow
+    python3Packages.dbus-python
+    python3Packages.xcffib
+    python3Packages.cairocffi
+    python3Packages.requests
+    python3Packages.i3ipc
+    mypy
   ];
 }

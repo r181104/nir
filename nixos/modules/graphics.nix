@@ -42,6 +42,16 @@
       export __VK_LAYER_NV_optimus=NVIDIA_only
       exec "$@"
     '')
+      mesa
+      mesa-demos
+      vulkan-loader
+      vulkan-tools
+      vulkan-validation-layers
+      vulkan-extension-layer
+      libvdpau-va-gl
+      intel-media-driver
+      libva
+      libva-utils
   ];
 
   boot.blacklistedKernelModules = ["nouveau" "nvidiafb"];

@@ -9,7 +9,7 @@
     gcc
     rustup
     go
-    python314
+    python314Full
     pipx
     uv
     jdk
