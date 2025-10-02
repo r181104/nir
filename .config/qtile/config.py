@@ -8,9 +8,9 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
 # --- MODIFIERS AND TERMINAL ---
-mod = "mod4"
-mmod = "mod1"
-mmodd = "control"
+mod = "mod4"  # Super key
+mmod = "mod1"  # Alt key
+mmodd = "control"  # Ctrl key alias
 terminal = "nvidia-run wezterm"
 term = guess_terminal()
 filemanager = "thunar"
@@ -27,6 +27,11 @@ with open(cache, "r") as file:
 
 # --- LIGHTWEIGHT GPU STATUS WIDGET ---
 class GPUStatus(widget.base.InLoopPollText):
+    """
+    Show which GPU is active: Intel, NVIDIA, or both.
+    Lightweight: only checks loaded kernel modules.
+    """
+
     def poll(self):
         intel_loaded = os.path.exists("/sys/module/i915")
         nvidia_loaded = os.path.exists("/sys/module/nvidia")
@@ -42,15 +47,19 @@ class GPUStatus(widget.base.InLoopPollText):
 
 # --- KEYBINDINGS ---
 keys = [
+    # Launch applications
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "b", lazy.spawn(browser), desc="Launch browser"),
     Key([mmodd], "space", lazy.spawn(theme), desc="Launch theme changer"),
     Key([mod], "e", lazy.spawn(filemanager), desc="Launch file manager"),
+    # Layout navigation
     Key([mod], "j", lazy.screen.prev_group()),
     Key([mod], "k", lazy.screen.next_group()),
+    # Window management
     Key([mod, "control"], "w", lazy.window.toggle_maximize()),
     Key([mod], "h", lazy.window.toggle_minimize()),
     Key([mmod, "control"], "l", lazy.spawn("lock")),
+    # Media controls
     Key(
         [],
         "XF86AudioRaiseVolume",
@@ -65,20 +74,24 @@ keys = [
     Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause")),
     Key([], "XF86AudioNext", lazy.spawn("playerctl next")),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous")),
+    # System controls
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +10%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
     Key([], "XF86AudioMedia", lazy.spawn("pavucontrol")),
+    # Layout navigation and window movement
     Key([mod, "shift"], "space", lazy.layout.next()),
     Key([mod, "shift"], "h", lazy.layout.shuffle_left()),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down()),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right()),
+    # Window resizing
     Key([mod, "control"], "h", lazy.layout.grow_left()),
     Key([mod, "control"], "j", lazy.layout.grow_down()),
     Key([mod, "control"], "k", lazy.layout.grow_up()),
     Key([mod, "control"], "l", lazy.layout.grow_right()),
     Key([mod], "n", lazy.layout.normalize()),
     Key([mod, "control"], "Return", lazy.layout.toggle_split()),
+    # System commands
     Key([mod], "Tab", lazy.next_layout()),
     Key([mod], "q", lazy.window.kill()),
     Key([mod], "f", lazy.window.toggle_fullscreen()),
@@ -88,6 +101,7 @@ keys = [
     Key([mod], "space", lazy.spawncmd()),
 ]
 
+# VT switching for Wayland fallback
 for vt in range(1, 8):
     keys.append(
         Key(
@@ -100,7 +114,7 @@ for vt in range(1, 8):
         )
     )
 
-# --- GROUPS ---
+# --- GROUPS WITH NERD FONT ICONS ---
 groups = [
     Group("1", label=""),
     Group("2", label=""),
@@ -114,6 +128,7 @@ groups = [
     Group("0", label=""),
 ]
 
+# Group keybindings
 for i in groups:
     keys.extend(
         [
@@ -122,13 +137,14 @@ for i in groups:
         ]
     )
 
-# --- LAYOUTS ---
+# --- LAYOUTS WITH PYWAL COLORS ---
 layout_common = {
     "border_focus": colors[5],
     "border_normal": colors[8],
     "border_width": 2,
     "margin": 0,
 }
+
 layouts = [layout.Columns(**layout_common), layout.Tile(**layout_common)]
 
 # --- WIDGET DEFAULTS ---
@@ -142,7 +158,7 @@ widget_defaults = {
 extension_defaults = widget_defaults.copy()
 
 
-# --- LIGHTWEIGHT BAR ---
+# --- LIGHTWEIGHT BAR CONFIGURATION ---
 def create_bar_widgets():
     return [
         widget.CurrentLayoutIcon(scale=0.7, foreground=colors[3], padding=12),
@@ -221,7 +237,7 @@ screens = [
     )
 ]
 
-# --- MOUSE ---
+# --- MOUSE CONFIGURATION ---
 mouse = [
     Drag(
         [mod],
@@ -260,7 +276,7 @@ floating_layout = layout.Floating(
 )
 
 
-# --- AUTOSTART ---
+# --- AUTOSTART HOOK ---
 @hook.subscribe.startup_once
 def autostart():
     subprocess.Popen([os.path.expanduser("~/nir/.local/bin/autostart")])
