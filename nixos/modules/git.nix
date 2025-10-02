@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  gitUsers = ["sten" "otheruser"];
+  gitUsers = ["sten"];
   gitUserName = "r181104";
   gitUserEmail = "sten181104@gmail.com";
   gitSigningKeyRelative = ".ssh/id_rsa";
@@ -68,7 +68,7 @@ in {
     EOF
 
           # set ownership and permissions
-          chown "$u:$u" "$gitConfigFile"
+          chown "$u:users" "$gitConfigFile"
         done
   '';
 }
