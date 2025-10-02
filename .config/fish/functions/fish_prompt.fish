@@ -1,4 +1,7 @@
 function fish_prompt
+    # Enable timing info globally (put this once in your config.fish to make sure)
+    set -g __fish_command_duration 1
+
     set_color cyan
     echo -n (whoami)"@"(hostname -s)" "
 
@@ -34,6 +37,8 @@ function fish_prompt
         echo -n "["$__fish_last_command_duration"s] "
     end
 
+    echo ""
     set_color normal
     echo -n "> "
 end
+
