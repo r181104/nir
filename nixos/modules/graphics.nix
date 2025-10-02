@@ -5,9 +5,8 @@
 }: {
   services.xserver.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
-
   hardware.nvidia = {
-    open = false; # Pascal, GTX/Quadro cards need closed
+    open = false;
     modesetting.enable = true;
     powerManagement.enable = true;
     nvidiaSettings = true;
@@ -36,7 +35,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    # wrapper script for PRIME offload
     (pkgs.writeShellScriptBin "nvidia-run" ''
       #!/bin/sh
       export __NV_PRIME_RENDER_OFFLOAD=1
