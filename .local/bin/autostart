@@ -1,37 +1,43 @@
 #!/bin/sh
 
-# === Monitor setup (auto-detect connected) ===
-monitors
+# === NVIDIA + Intel Hybrid Setup ===
+if xrandr --listproviders 2>/dev/null | grep -q NVIDIA; then
+  xrandr --setprovideroutputsource modesetting NVIDIA-0 2>/dev/null ||
+    echo "Failed to set NVIDIA provider"
+fi
+
+# Set all connected monitors to 1080p 60Hz
+for output in $(xrandr | grep " connected" | awk '{print $1}'); do
+  xrandr --output "$output" --mode 1920x1080 --rate 60.00 2>/dev/null
+done
 
 # === Keyboard & Mouse ===
 xset r rate 200 50
 xset -b
 xset s off -dpms
 
-# === Numlock & Gestures ===
-command -v numlockx >/dev/null 2>&1 && numlockx &
-command -v libinput-gestures >/dev/null 2>&1 &&
-  pkill -f .libinput-gestu >/dev/null || libinput-gestures &
+# === Gestures ===
+pkill -f libinput-gestures >/dev/null || libinput-gestures &
 
-# === Touchpad & TrackPoint (auto-detect) ===
-for id in $(xinput list --id-only | xargs -n1 xinput list-props | grep -B1 "Touchpad\|TrackPoint" | grep "id=" | awk '{print $4}'); do
-  name=$(xinput list "$id" | grep -o '".*"' | tr -d '"')
+# === Touchpad & TrackPoint setup ===
+for id in $(xinput list --id-only); do
+  name=$(xinput list $id | grep -o '".*"' | tr -d '"')
   if echo "$name" | grep -qi touchpad; then
-    xinput set-prop "$id" "libinput Tapping Enabled" 1
-    xinput set-prop "$id" "libinput Natural Scrolling Enabled" 0
-    xinput set-prop "$id" "libinput Disable While Typing Enabled" 1
-    xinput set-prop "$id" "libinput Accel Speed" 0.3
+    xinput set-prop $id "libinput Tapping Enabled" 1
+    xinput set-prop $id "libinput Natural Scrolling Enabled" 0
+    xinput set-prop $id "libinput Disable While Typing Enabled" 1
+    xinput set-prop $id "libinput Accel Speed" 0.3
   elif echo "$name" | grep -qi trackpoint; then
-    xinput set-prop "$id" "libinput Accel Speed" 0.0
+    xinput set-prop $id "libinput Accel Speed" 0.0
   fi
 done
 
 # === Background apps (no duplicates) ===
-for app in dunst picom sxhkd nm-applet blueman-applet; do
-  pgrep -x "$app" >/dev/null || $app &
+for app in dunst picom nm-applet blueman-applet; do
+  pkill -f "$app" >/dev/null || $app &
 done
 
-# === Wallpaper & Polybar ===
+# === Wallpaper & Pywal ===
 wal -R &
 
 # === Cursor theme ===
