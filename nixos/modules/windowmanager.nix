@@ -41,6 +41,8 @@
     # === GUI tools ===
     lxappearance
     # === Python Packages for QTILE ===
+    python3Packages.qtile
+    python3Packages.qtile-extras
     python3Packages.psutil
     python3Packages.pywal
     python3Packages.pillow

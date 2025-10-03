@@ -1,9 +1,9 @@
 import os
 import subprocess
-from types import FunctionType
+from typing import Any
 
 from libqtile import bar, hook, layout, qtile, widget
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
@@ -98,7 +98,8 @@ keys = [
     Key([mod], "t", lazy.window.toggle_floating()),
     Key([mod], "r", lazy.reload_config(), lazy.spawn("notify-send 'Config Reloaded'")),
     Key([mmod, "control"], "q", lazy.shutdown()),
-    Key([mod], "space", lazy.spawncmd()),
+    # FIXED: spawncmd with prompt widget
+    Key([mod], "space", lazy.spawncmd(prompt="Run: ", widget="runprompt")),
 ]
 
 # VT switching for Wayland fallback
@@ -137,6 +138,32 @@ for i in groups:
         ]
     )
 
+groups.append(
+    ScratchPad(
+        "scratchpad",
+        [
+            DropDown(
+                "term", "alacritty", width=0.8, height=0.8, x=0.1, y=0.0, opacity=0.8
+            ),
+            DropDown(
+                "volumemixer",
+                "pavucontrol",
+                width=0.8,
+                height=0.6,
+                x=0.1,
+                y=0.4,
+                opacity=0.8,
+            ),
+        ],
+    )
+)
+keys.extend(
+    [
+        Key([mod], "p", lazy.group["scratchpad"].dropdown_toggle("term")),
+        Key([mod], "v", lazy.group["scratchpad"].dropdown_toggle("volumemixer")),
+    ]
+)
+
 # --- LAYOUTS WITH PYWAL COLORS ---
 layout_common = {
     "border_focus": colors[5],
@@ -172,6 +199,12 @@ def create_bar_widgets():
             rounded=True,
             padding=12,
             margin_x=6,
+        ),
+        widget.Prompt(
+            prompt="Run: ",
+            name="runprompt",
+            foreground=colors[5],
+            padding=0,
         ),
         widget.WindowName(max_chars=100, foreground=colors[6], padding=12),
         widget.Systray(icon_size=20, padding=12),
@@ -253,7 +286,7 @@ mouse = [
 
 # --- OTHER SETTINGS ---
 dgroups_key_binder = None
-dgroups_app_rules: list[FunctionType] = []
+dgroups_app_rules: list[Any] = []
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
