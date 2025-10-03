@@ -11,11 +11,11 @@ from libqtile.utils import guess_terminal
 mod = "mod4"  # Super key
 mmod = "mod1"  # Alt key
 mmodd = "control"  # Ctrl key alias
-terminal = "nvidia-run wezterm"
+terminal = "wezterm"
 term = guess_terminal()
 filemanager = "thunar"
 theme = "wset"
-browser = "nvidia-run firefox --no-remote"
+browser = "firefox --no-remote"
 
 # --- LOAD PYWAL COLORS ---
 colors = []
