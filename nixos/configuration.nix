@@ -8,6 +8,7 @@
     /etc/nixos/hardware-configuration.nix
     ./modules/basic-pkgs.nix
     ./modules/security.nix
+    ./modules/power.nix
     ./modules/git.nix
     ./modules/audio.nix
     ./modules/video.nix
