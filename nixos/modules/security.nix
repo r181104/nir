@@ -1,55 +1,39 @@
 {
   config,
   pkgs,
+  lib,
   ...
-}: {
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [22 80 443];
-    allowedUDPPorts = [53];
-    allowedICMP = true;
-    logDropped = true;
-    trustedInterfaces = ["lo"];
+}: let
+  crowdsecService = {
+    description = "CrowdSec agent";
+    after = ["network.target"];
+    wantedBy = ["multi-user.target"];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.crowdsec}/bin/crowdsec -c /etc/crowdsec/config.yaml";
+      Restart = "on-failure";
+    };
+  };
+in {
+  options.security = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable modular firewall + CrowdSec security";
+    };
+  };
 
-    extraCommands = ''
-      # Drop MySQL from outside
-      nft add rule inet filter input tcp dport 3306 drop
+  config = lib.mkIf config.security.enable {
+    networking.firewall.enable = true;
+    networking.firewall.allowedTCPPorts = [22 80 443];
+    networking.firewall.allowedUDPPorts = [53];
+    networking.firewall.trustedInterfaces = ["lo"];
+    networking.firewall.extraCommands = ''
+      nft add rule inet filter input icmp type echo-request accept
     '';
+
+    environment.systemPackages = [pkgs.crowdsec pkgs.crowdsec-firewall pkgs.heirloom-mailx];
+
+    systemd.services.crowdsec = crowdsecService;
   };
-
-  services.fail2ban = {
-    enable = true;
-
-    defaultBanTime = 3600; # 1 hour
-    defaultFindTime = 600; # 10 minutes
-    maxRetry = 5;
-
-    jails = {
-      sshd = {
-        enabled = true;
-        port = "ssh";
-      };
-
-      nginx-http-auth = {
-        enabled = true;
-        port = "http,https";
-        filter = "nginx-http-auth";
-        logpath = "/var/log/nginx/*error.log";
-      };
-    };
-    email = {
-      enabled = true;
-      from = "sten181104@gmail.com";
-      to = "rishabhhaldiya18@gmail.com";
-      smtp = {
-        host = "nixos";
-        port = 587;
-        user = "sten";
-        password = "smtp-pass";
-        tls = true;
-      };
-    };
-  };
-  systemd.services.fail2ban.serviceConfig.StandardOutput = "journal";
-  systemd.services.fail2ban.serviceConfig.StandardError = "journal";
 }

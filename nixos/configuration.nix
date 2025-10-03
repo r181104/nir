@@ -19,6 +19,7 @@
     ./modules/auto-upgrade.nix
   ];
 
+  power.enable = true;
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -34,16 +35,8 @@
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [80 443 2222];
-    };
   };
   hardware.bluetooth.enable = true;
-
-  power.enable = true;
-  power.chargeStart = 80;
-  power.chargeStop = 95;
 
   users.defaultUserShell = pkgs.bash;
   users.users.sten = {

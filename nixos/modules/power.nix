@@ -8,45 +8,25 @@
   # Auto-detect batteries (BAT0, BAT1, etc.)
   batteryNames =
     builtins.filter (b: builtins.match "BAT[0-9]+" b != null)
-    (builtins.attrNames (
-      (builtins.tryEval (builtins.readDir "/sys/class/power_supply")).value or {}
-    ));
+    (builtins.attrNames ((builtins.tryEval (builtins.readDir "/sys/class/power_supply")).value or {}));
 
-  # Generate TLP settings for batteries
   batterySettings =
     builtins.listToAttrs (map (b: {
         name = "START_CHARGE_THRESH_${b}";
-        value = toString config.power.chargeStart;
+        value = "80"; # default start charge
       })
       batteryNames)
     // builtins.listToAttrs (map (b: {
         name = "STOP_CHARGE_THRESH_${b}";
-        value = toString config.power.chargeStop;
+        value = "95"; # default stop charge
       })
       batteryNames);
-
-  # ANSI color codes (Nord palette)
-  nordBlue = "\033[38;5;38m";
-  nordRed = "\033[38;5;203m";
-  nordGreen = "\033[38;5;64m";
-  nordYellow = "\033[38;5;220m";
-  nordReset = "\033[0m";
 in {
   options.power = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Enable TLP-based power management";
-    };
-    chargeStart = lib.mkOption {
-      type = lib.types.int;
-      default = 80;
-      description = "TLP start charge threshold for all batteries";
-    };
-    chargeStop = lib.mkOption {
-      type = lib.types.int;
-      default = 95;
-      description = "TLP stop charge threshold for all batteries";
+      description = "Enable TLP-based power management for laptop";
     };
   };
 
@@ -61,24 +41,24 @@ in {
     services.tlp.settings =
       batterySettings
       // {
-        CPU_SCALING_GOVERNOR_ON_AC = "schedutil";
-        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+        CPU_SCALING_GOVERNOR_ON_AC = "schedutil"; # balanced
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave"; # battery
       };
 
-    # Boot-time colored TLP summary
+    # Boot-time TLP summary
     systemd.services.tlp-summary = {
-      description = "Print colorful TLP status summary on boot";
+      description = "Print TLP status summary on boot";
       after = ["multi-user.target"];
       wantedBy = ["multi-user.target"];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = ''
-          ${pkgs.coreutils}/bin/echo -e "${nordBlue}>>> TLP Status Summary${nordReset}"
-          ${pkgs.coreutils}/bin/echo -e "${nordYellow}--------------------------------${nordReset}"
-          ${pkgs.tlp}/bin/tlp-stat -s | ${pkgs.coreutils}/bin/sed "s/^/${nordGreen}/;s/$/${nordReset}/"
-          ${pkgs.tlp}/bin/tlp-stat -b | ${pkgs.coreutils}/bin/sed "s/^/${nordRed}/;s/$/${nordReset}/"
-          ${pkgs.tlp}/bin/tlp-stat -p | ${pkgs.coreutils}/bin/sed "s/^/${nordBlue}/;s/$/${nordReset}/"
-          ${pkgs.coreutils}/bin/echo -e "${nordYellow}--------------------------------${nordReset}"
+          ${pkgs.coreutils}/bin/echo -e ">>> TLP Status Summary"
+          ${pkgs.coreutils}/bin/echo -e "--------------------------------"
+          ${pkgs.tlp}/bin/tlp-stat -s
+          ${pkgs.tlp}/bin/tlp-stat -b
+          ${pkgs.tlp}/bin/tlp-stat -p
+          ${pkgs.coreutils}/bin/echo -e "--------------------------------"
         '';
       };
     };
