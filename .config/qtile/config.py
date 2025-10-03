@@ -77,7 +77,7 @@ keys = [
     # System controls
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +10%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
-    Key([], "XF86AudioMedia", lazy.spawn("pavucontrol")),
+    # Key([], "XF86AudioMedia", lazy.spawn("pavucontrol")),
     # Layout navigation and window movement
     Key([mod, "shift"], "space", lazy.layout.next()),
     Key([mod, "shift"], "h", lazy.layout.shuffle_left()),
@@ -143,20 +143,29 @@ groups.append(
         "scratchpad",
         [
             DropDown(
-                "term", "alacritty", width=0.8, height=0.8, x=0.1, y=0.0, opacity=0.8
+                "term",
+                "alacritty",
+                width=0.8,
+                height=0.8,
+                x=0.1,
+                y=0.0,
+                opacity=0.8,
+                on_focus_lost_hide=True,
             ),
             DropDown(
                 "volumemixer",
-                "pavucontrol",
+                "env WM_CLASS=pavucontrol pavucontrol",
                 width=0.8,
                 height=0.6,
                 x=0.1,
                 y=0.4,
                 opacity=0.8,
+                on_focus_lost_hide=True,
             ),
         ],
-    )
-)
+    ),
+),
+
 keys.extend(
     [
         Key([mod], "p", lazy.group["scratchpad"].dropdown_toggle("term")),
