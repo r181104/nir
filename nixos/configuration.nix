@@ -83,6 +83,11 @@
         KERNEL=="event*", NAME="input/%k", MODE="660", GROUP="input"
   '';
 
+  security.rtkit.enable = true;
+  security.sudo.enable = true;
+  security.sudo.wheelNeedsPassword = false;
+  security.wrappers.sudo.source = "${pkgs.sudo}/bin/sudo";
+
   time.timeZone = "Asia/Kolkata";
   i18n.defaultLocale = "en_IN";
   i18n.extraLocaleSettings = {
