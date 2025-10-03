@@ -41,6 +41,10 @@
   };
   hardware.bluetooth.enable = true;
 
+  power.enable = true;
+  power.chargeStart = 80;
+  power.chargeStop = 95;
+
   users.defaultUserShell = pkgs.bash;
   users.users.sten = {
     isNormalUser = true;
