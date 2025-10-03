@@ -50,6 +50,7 @@
     wezterm
 
     # === Browsers & search ===
+    firefox-devedition
     ddgr
     w3m
 
@@ -72,8 +73,6 @@
   security.polkit.enable = true;
   # Enable shells
   programs.fish.enable = true;
-  # Enable Firefox
-  programs.firefox.enable = true;
   # Enable nm-applet
   programs.nm-applet.enable = true;
 }

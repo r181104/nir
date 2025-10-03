@@ -15,7 +15,7 @@ terminal = "wezterm"
 term = guess_terminal()
 filemanager = "thunar"
 theme = "wset"
-browser = "firefox"
+browser = "firefox-devedition --no-remote"
 
 # --- LOAD PYWAL COLORS ---
 colors = []
