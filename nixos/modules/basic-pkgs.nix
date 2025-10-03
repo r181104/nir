@@ -47,7 +47,6 @@
 
     # === Terminal emulators ===
     alacritty
-    wezterm
 
     # === Browsers & search ===
     firefox-devedition

@@ -11,7 +11,7 @@ from libqtile.utils import guess_terminal
 mod = "mod4"  # Super key
 mmod = "mod1"  # Alt key
 mmodd = "control"  # Ctrl key alias
-terminal = "wezterm"
+terminal = "alacritty"
 term = guess_terminal()
 filemanager = "thunar"
 theme = "wset"
