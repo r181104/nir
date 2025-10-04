@@ -180,9 +180,58 @@ else
 end
 
 # NOTE: ==============================
-#   FZF
+#   SKIM AND ZOXIDE
 # ==============================
 if command -q sk
     bind \er find_file
     bind \et sk
+end
+
+if command -q zoxide
+    zoxide init fish | source
+end
+
+# Lightweight zoxide seeding including important hidden dirs
+function __zoxide_seed --on-event fish_prompt
+    set seed_dir ~/.local/share/zoxide
+    set db_file $seed_dir/.dirs_db
+
+    mkdir -p $seed_dir
+
+    # top-level dirs + important hidden dirs
+    set -l dirs (find $HOME -maxdepth 1 -type d \
+        -not -path "$HOME/.cache" \
+        -not -path "$HOME/.local/share" \
+        -not -path "$HOME/Downloads" \
+        -not -path "$HOME/Trash" \
+        -not -path "$HOME/.mozilla" \
+        -not -path "$HOME/.thunderbird" \
+        -not -path "$HOME/.steam" \
+    )
+    set -l hidden_dirs "$HOME/.config" "$HOME/.local/bin" "$HOME/.ssh"
+
+    set dirs $dirs $hidden_dirs
+
+    # create db file if missing
+    if not test -f $db_file
+        touch $db_file
+    end
+
+    set -l existing_dirs (cat $db_file)
+
+    # only new dirs
+    set -l new_dirs
+    for d in $dirs
+        if not contains $d $existing_dirs
+            set new_dirs $new_dirs $d
+        end
+    end
+
+    if test (count $new_dirs) -gt 0
+        # background seeding
+        for d in $new_dirs
+            nohup zoxide add $d >/dev/null 2>&1 &
+        end
+        printf "%s\n" $new_dirs >> $db_file
+    end
 end
