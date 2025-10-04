@@ -34,7 +34,6 @@
               ++ [
                 unstablePkgs.neovim
                 unstablePkgs.prettier
-                unstablePkgs.gemini-cli
               ];
           })
         ];
