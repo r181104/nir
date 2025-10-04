@@ -3,6 +3,6 @@ return {
 	config = function()
 		require("notify").setup({ background_colour = "#000000" })
 		vim.notify = require("notify")
-		vim.notify("Hey! What we doing today")
+		-- vim.notify("Hey! What we doing today")
 	end,
 }
