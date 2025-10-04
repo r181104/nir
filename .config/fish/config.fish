@@ -41,13 +41,6 @@ if type -q keychain
 end
 
 # NOTE: ==============================
-#   Prompt (Starship)
-# ==============================
-if command -q starship
-    starship init fish | source
-end
-
-# NOTE: ==============================
 #   Key Bindings
 # ==============================
 set -g fish_key_bindings fish_default_key_bindings

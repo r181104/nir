@@ -77,18 +77,23 @@ keys = [
     # System controls
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +10%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
-    # Key([], "XF86AudioMedia", lazy.spawn("pavucontrol")),
+    Key([], "XF86AudioMedia", lazy.spawn("pavucontrol")),
+    # Directional focus
+    Key([mmod], "h", lazy.layout.left(), desc="Focus left"),
+    Key([mmod], "l", lazy.layout.right(), desc="Focus right"),
+    Key([mmod], "j", lazy.layout.down(), desc="Focus down"),
+    Key([mmod], "k", lazy.layout.up(), desc="Focus up"),
     # Layout navigation and window movement
     Key([mod, "shift"], "space", lazy.layout.next()),
-    Key([mod, "shift"], "h", lazy.layout.shuffle_left()),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down()),
-    Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
-    Key([mod, "shift"], "l", lazy.layout.shuffle_right()),
+    Key([mod, "control"], "h", lazy.layout.shuffle_left()),
+    Key([mod, "control"], "j", lazy.layout.shuffle_down()),
+    Key([mod, "control"], "k", lazy.layout.shuffle_up()),
+    Key([mod, "control"], "l", lazy.layout.shuffle_right()),
     # Window resizing
-    Key([mod, "control"], "h", lazy.layout.grow_left()),
-    Key([mod, "control"], "j", lazy.layout.grow_down()),
-    Key([mod, "control"], "k", lazy.layout.grow_up()),
-    Key([mod, "control"], "l", lazy.layout.grow_right()),
+    Key([mod, "shift"], "h", lazy.layout.grow_left()),
+    Key([mod, "shift"], "j", lazy.layout.grow_down()),
+    Key([mod, "shift"], "k", lazy.layout.grow_up()),
+    Key([mod, "shift"], "l", lazy.layout.grow_right()),
     Key([mod], "n", lazy.layout.normalize()),
     Key([mod, "control"], "Return", lazy.layout.toggle_split()),
     # System commands
