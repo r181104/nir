@@ -10,6 +10,9 @@ set statusbar-basename true
 set statusbar-h-padding 5
 set statusbar-v-padding 2
 
+set font "MesloLGS Nerd Font"
+set font 22
+
 # === Keybindings tweaks ===
 map u scroll half-up
 map d scroll half-down

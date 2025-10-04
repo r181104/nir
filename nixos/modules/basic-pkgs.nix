@@ -53,6 +53,11 @@
     ddgr
     w3m
 
+    # === Zathura ===
+    zathura
+    poppler
+    ps
+
     # === GTK dependencies ===
     gtk2
     gtk3
