@@ -13,7 +13,7 @@ mmod = "mod1"  # Alt key
 mmodd = "control"  # Ctrl key alias
 terminal = "alacritty"
 term = guess_terminal()
-filemanager = "thunar"
+filemanager = "pcmanfm"
 theme = "wset"
 browser = "firefox-devedition --no-remote"
 
