@@ -28,15 +28,7 @@ return {
 		})
 
 		-- ===== Pairs =====
-		require("mini.pairs").setup({
-			mappings = {
-				['"'] = { action = "both" },
-				["'"] = { action = "both" },
-				["("] = { action = "both" },
-				["{"] = { action = "both" },
-				["["] = { action = "both" },
-			},
-		})
+		require("mini.pairs").setup({})
 
 		-- ===== AI & Operators =====
 		require("mini.ai").setup({

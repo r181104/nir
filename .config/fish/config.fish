@@ -1,10 +1,3 @@
-if status is-interactive
-    if command -q fastfetch
-        fastfetch --config my
-        alias fetch "fastfetch --config my"
-    end
-end
-
 # NOTE: ==============================
 #   Core Environment Variables
 # ==============================
@@ -136,6 +129,8 @@ alias tb "BROWSER=w3m ddgr"
 # NOTE: Python Server
 alias phs "python -m http.server"
 alias phsd "python -m http.server --directory"
+
+alias fetch "fastfetch --config my"
 
 # NOTE: ==============================
 #   File Listing (eza / ls)

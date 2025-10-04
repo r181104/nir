@@ -48,6 +48,15 @@ style = "Italic"
 family = "MesloLGS Nerd Font"
 style = "Bold Italic"
 
+[keyboard]
+bindings = [
+{ key = "c", mods = "ALT", action = "CopySelection" },
+{ key = "v", mods = "ALT", action = "PasteSelection" },
+]
+
+[mouse]
+hide_when_typing = true
+
 [general]
 live_config_reload = true
 import = ["~/.cache/wal/colors-alacritty.toml"]
