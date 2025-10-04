@@ -38,29 +38,29 @@ map f toggle_fullscreen
 # ==========================
 # THEME: MATERIAL
 # ==========================
-set default-bg "#263238"
-set default-fg "#ECEFF1"
-set inputbar-bg "#37474F"
-set inputbar-fg "#FFFFFF"
-set statusbar-bg "#37474F"
-set statusbar-fg "#FFFFFF"
-set highlight-color "#FF9800"
-set highlight-active-color "#FF5722"
-set recolor true
-set recolor-darkcolor "#ECEFF1"
-set recolor-lightcolor "#263238"
+# set default-bg "#263238"
+# set default-fg "#ECEFF1"
+# set inputbar-bg "#37474F"
+# set inputbar-fg "#FFFFFF"
+# set statusbar-bg "#37474F"
+# set statusbar-fg "#FFFFFF"
+# set highlight-color "#FF9800"
+# set highlight-active-color "#FF5722"
+# set recolor true
+# set recolor-darkcolor "#ECEFF1"
+# set recolor-lightcolor "#263238"
 
 # ==========================
 # THEME: OCEANIC
 # ==========================
-# set default-bg "#1B2B34"
-# set default-fg "#D8DEE9"
-# set inputbar-bg "#343D46"
-# set inputbar-fg "#FFFFFF"
-# set statusbar-bg "#343D46"
-# set statusbar-fg "#FFFFFF"
-# set highlight-color "#6699CC"
-# set highlight-active-color "#EC5f67"
-# set recolor true
-# set recolor-darkcolor "#D8DEE9"
-# set recolor-lightcolor "#1B2B34"
+set default-bg "#1B2B34"
+set default-fg "#D8DEE9"
+set inputbar-bg "#343D46"
+set inputbar-fg "#FFFFFF"
+set statusbar-bg "#343D46"
+set statusbar-fg "#FFFFFF"
+set highlight-color "#6699CC"
+set highlight-active-color "#EC5f67"
+set recolor true
+set recolor-darkcolor "#D8DEE9"
+set recolor-lightcolor "#1B2B34"
