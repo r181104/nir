@@ -5,14 +5,12 @@ from typing import Any
 from libqtile import bar, hook, layout, qtile, widget
 from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
 
 # --- MODIFIERS AND TERMINAL ---
 mod = "mod4"  # Super key
-mmod = "mod1"  # Alt key
-mmodd = "control"  # Ctrl key alias
+alt = "mod1"  # Alt key
+ctrl = "control"  # Ctrl key alias
 terminal = "alacritty"
-term = guess_terminal()
 filemanager = "pcmanfm"
 theme = "wset"
 browser = "firefox-devedition --no-remote"
@@ -50,7 +48,7 @@ keys = [
     # Launch applications
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "b", lazy.spawn(browser), desc="Launch browser"),
-    Key([mmodd], "space", lazy.spawn(theme), desc="Launch theme changer"),
+    Key([ctrl], "space", lazy.spawn(theme), desc="Launch theme changer"),
     Key([mod], "e", lazy.spawn(filemanager), desc="Launch file manager"),
     # Layout navigation
     Key([mod], "j", lazy.screen.prev_group()),
@@ -58,7 +56,7 @@ keys = [
     # Window management
     Key([mod, "control"], "w", lazy.window.toggle_maximize()),
     Key([mod], "h", lazy.window.toggle_minimize()),
-    Key([mmod, "control"], "l", lazy.spawn("lock")),
+    Key([alt, "control"], "l", lazy.spawn("lock")),
     # Media controls
     Key(
         [],
@@ -79,10 +77,10 @@ keys = [
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
     Key([], "XF86AudioMedia", lazy.spawn("pavucontrol")),
     # Directional focus
-    Key([mmod], "h", lazy.layout.left(), desc="Focus left"),
-    Key([mmod], "l", lazy.layout.right(), desc="Focus right"),
-    Key([mmod], "j", lazy.layout.down(), desc="Focus down"),
-    Key([mmod], "k", lazy.layout.up(), desc="Focus up"),
+    Key([alt], "h", lazy.layout.left(), desc="Focus left"),
+    Key([alt], "l", lazy.layout.right(), desc="Focus right"),
+    Key([alt], "j", lazy.layout.down(), desc="Focus down"),
+    Key([alt], "k", lazy.layout.up(), desc="Focus up"),
     # Layout navigation and window movement
     Key([mod, "shift"], "space", lazy.layout.next()),
     Key([mod, "control"], "h", lazy.layout.shuffle_left()),
@@ -102,7 +100,7 @@ keys = [
     Key([mod], "f", lazy.window.toggle_fullscreen()),
     Key([mod], "t", lazy.window.toggle_floating()),
     Key([mod], "r", lazy.reload_config(), lazy.spawn("notify-send 'Config Reloaded'")),
-    Key([mmod, "control"], "q", lazy.shutdown()),
+    Key([alt, "control"], "q", lazy.shutdown()),
     # FIXED: spawncmd with prompt widget
     Key([mod], "space", lazy.spawncmd(prompt="Run: ", widget="runprompt")),
 ]
